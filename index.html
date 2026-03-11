@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bipchi AI – B.A 4th Sem Geography</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink-100: #fff0f5;
+    --pink-200: #ffd6e7;
+    --pink-300: #ffb3cc;
+    --pink-400: #ff80aa;
+    --pink-500: #ff4d88;
+    --pink-600: #e6005c;
+    --rose: #ff6b9d;
+    --gold: #f0c060;
+    --cream: #fff8f0;
+    --dark: #2d1b2e;
+    --purple-soft: #8b4e6e;
+    --shadow: rgba(255,105,180,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #fff0f5 0%, #ffe4f0 30%, #fff0fa 60%, #fce8ff 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(circle at 10% 20%, rgba(255,180,210,0.25) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(220,130,255,0.18) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(255,200,230,0.1) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* Floating hearts */
+  .heart-bg { position:fixed; pointer-events:none; z-index:0; }
+  .heart-bg span {
+    position: absolute; opacity: 0.07;
+    animation: floatHeart linear infinite;
+  }
+  @keyframes floatHeart {
+    0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+    10%  { opacity: 0.07; }
+    90%  { opacity: 0.07; }
+    100% { transform: translateY(-120px) rotate(360deg); opacity: 0; }
+  }
+
+  /* MAIN LAYOUT */
+  .app {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    height: 100vh;
+  }
+
+  /* HEADER */
+  .header {
+    background: rgba(255,255,255,0.78);
+    backdrop-filter: blur(22px);
+    border-bottom: 1.5px solid rgba(255,150,180,0.22);
+    padding: 11px 18px;
+    display: flex; align-items: center; gap: 13px;
+    box-shadow: 0 4px 24px rgba(255,100,160,0.1);
+    flex-shrink: 0;
+  }
+  .ai-avatar-header {
+    width: 46px; height: 46px; border-radius: 50%;
+    border: 2.5px solid var(--pink-400);
+    box-shadow: 0 0 0 4px rgba(255,100,160,0.15), 0 2px 12px rgba(255,77,136,0.3);
+    object-fit: cover;
+    flex-shrink: 0;
+    transition: transform 0.3s;
+    background: linear-gradient(135deg,#ff80aa,#d63384);
+  }
+  .ai-avatar-header:hover { transform: scale(1.08); }
+  .header-info { flex: 1; min-width: 0; }
+  .header-info h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.18rem;
+    color: var(--dark);
+    font-weight: 700;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .header-info p {
+    font-size: 0.7rem;
+    color: var(--purple-soft);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .header-status {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.68rem; color: #22c55e; font-weight: 700;
+    margin-top: 1px;
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+  .header-tag {
+    background: linear-gradient(135deg, var(--pink-400), var(--purple-soft));
+    color: white; font-size: 0.6rem; font-weight: 700;
+    padding: 3px 9px; border-radius: 20px;
+    letter-spacing: 0.03em; white-space: nowrap; flex-shrink: 0;
+  }
+
+  /* STUDY BOARD */
+  .study-board {
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1.5px solid rgba(255,150,180,0.2);
+    padding: 8px 16px;
+    display: flex; align-items: center; gap: 10px;
+    flex-shrink: 0;
+  }
+  .board-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .board-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.88rem;
+    color: var(--dark);
+    font-weight: 700;
+  }
+  .board-text p {
+    font-size: 0.65rem;
+    color: var(--purple-soft);
+    font-weight: 600;
+  }
+  .board-warning {
+    margin-left: auto;
+    background: linear-gradient(135deg, #fff3cd, #ffe0a0);
+    border: 1px solid #f0c060;
+    border-radius: 10px;
+    padding: 4px 10px;
+    font-size: 0.6rem;
+    color: #7a5a00;
+    font-weight: 700;
+    text-align: center;
+    max-width: 150px;
+    flex-shrink: 0;
+    line-height: 1.3;
+  }
+
+  /* CHAT AREA */
+  .chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 12px 10px;
+    scroll-behavior: smooth;
+    display: flex; flex-direction: column;
+  }
+  .chat-container::-webkit-scrollbar { width: 4px; }
+  .chat-container::-webkit-scrollbar-thumb {
+    background: rgba(255,130,170,0.3); border-radius: 10px;
+  }
+
+  /* MESSAGES — new layout: avatar ABOVE bubble */
+  .msg-row {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    animation: fadeUp 0.35s ease;
+    max-width: 80%;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  /* AI messages: left side */
+  .msg-row.ai {
+    align-items: flex-start;
+    align-self: flex-start;
+  }
+  /* User messages: right side */
+  .msg-row.user {
+    align-items: flex-end;
+    align-self: flex-end;
+  }
+
+  /* avatar row (name + icon) */
+  .msg-meta {
+    display: flex; align-items: center; gap: 6px;
+    margin-bottom: 4px;
+  }
+  .msg-row.user .msg-meta { flex-direction: row-reverse; }
+
+  .avatar-sm {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: 2px solid var(--pink-300);
+    overflow: hidden; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    background: white;
+    box-shadow: 0 2px 8px rgba(255,80,140,0.18);
+  }
+  .avatar-sm img { width:100%; height:100%; object-fit:cover; }
+
+  .sender-name {
+    font-size: 0.68rem; font-weight: 700;
+    color: var(--purple-soft); letter-spacing: 0.02em;
+  }
+  .msg-row.user .sender-name { color: var(--pink-500); }
+
+  .bubble {
+    padding: 10px 15px;
+    border-radius: 18px;
+    font-size: 0.855rem;
+    line-height: 1.65;
+    word-break: break-word;
+    position: relative;
+  }
+  .bubble.ai {
+    background: rgba(255,255,255,0.94);
+    border: 1.2px solid rgba(255,150,185,0.22);
+    border-top-left-radius: 4px;
+    color: var(--dark);
+    box-shadow: 0 4px 18px rgba(255,100,155,0.09);
+  }
+  .bubble.user {
+    background: linear-gradient(135deg, #ff80aa, #d63384);
+    color: white;
+    border-top-right-radius: 4px;
+    box-shadow: 0 4px 16px rgba(214,51,132,0.32);
+  }
+  .bubble.ai ul { padding-left: 16px; margin-top: 4px; }
+  .bubble.ai ul li { margin-bottom: 3px; }
+  .bubble.ai strong { color: var(--pink-600); }
+  .bubble .time {
+    font-size: 0.6rem; opacity: 0.5;
+    margin-top: 5px; display: block;
+  }
+  .msg-row.user .bubble .time { text-align: right; color: rgba(255,255,255,0.75); }
+
+  /* TYPING */
+  .typing-row {
+    display: flex; flex-direction: column;
+    align-items: flex-start; align-self: flex-start;
+    margin-bottom: 14px;
+  }
+  .typing-dots {
+    background: rgba(255,255,255,0.92);
+    border: 1.2px solid rgba(255,150,185,0.22);
+    border-radius: 18px; border-top-left-radius: 4px;
+    padding: 11px 16px;
+    display: flex; gap: 5px; align-items: center;
+    box-shadow: 0 4px 14px rgba(255,100,155,0.07);
+  }
+  .typing-dots span {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--pink-400);
+    animation: bounce 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+  /* LOADING OVERLAY */
+  .loading-overlay {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #fff0f5, #ffe4f0, #fce8ff);
+    z-index: 9999;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 22px;
+    transition: opacity 0.6s, visibility 0.6s;
+  }
+  .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+  .loading-logo img {
+    width: 88px; height: 88px; border-radius: 50%;
+    border: 3px solid var(--pink-400);
+    box-shadow: 0 0 30px rgba(255,100,160,0.4);
+    animation: loadPulse 2s ease-in-out infinite;
+    object-fit: cover;
+  }
+  @keyframes loadPulse {
+    0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(255,100,160,0.4)}
+    50%{transform:scale(1.07);box-shadow:0 0 50px rgba(255,100,160,0.65)}
+  }
+  .loading-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem; color: var(--dark); font-weight: 700;
+  }
+  .loading-sub {
+    font-size: 0.78rem; color: var(--purple-soft); font-weight: 600;
+    text-align: center; max-width: 270px; line-height: 1.5;
+  }
+  .loading-bar-wrap {
+    width: 210px;
+    background: rgba(255,150,180,0.2);
+    border-radius: 20px; height: 6px; overflow: hidden;
+  }
+  .loading-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pink-400), var(--purple-soft));
+    border-radius: 20px;
+    animation: loadBar 2.6s ease forwards;
+  }
+  @keyframes loadBar { from{width:0%} to{width:100%} }
+  .loading-hearts { font-size: 1.1rem; letter-spacing: 6px; animation: spinH 4s linear infinite; }
+  @keyframes spinH { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+  /* INPUT AREA */
+  .input-area {
+    padding: 10px 14px 14px;
+    background: rgba(255,255,255,0.82);
+    backdrop-filter: blur(20px);
+    border-top: 1.5px solid rgba(255,150,180,0.2);
+    flex-shrink: 0;
+  }
+  .input-wrapper {
+    display: flex; align-items: center; gap: 9px;
+    background: rgba(255,255,255,0.97);
+    border: 1.5px solid rgba(255,130,170,0.32);
+    border-radius: 50px;
+    padding: 7px 7px 7px 16px;
+    box-shadow: 0 3px 18px rgba(255,100,155,0.1);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input-wrapper:focus-within {
+    border-color: var(--pink-400);
+    box-shadow: 0 4px 22px rgba(255,77,136,0.2);
+  }
+  .input-wrapper input {
+    flex: 1; border: none; outline: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.87rem;
+    background: transparent; color: var(--dark);
+  }
+  .input-wrapper input::placeholder { color: rgba(180,100,130,0.48); }
+  .send-btn {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-400), var(--purple-soft));
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; color: white;
+    box-shadow: 0 3px 12px rgba(255,77,136,0.38);
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex-shrink: 0;
+  }
+  .send-btn:hover { transform: scale(1.1); box-shadow: 0 5px 16px rgba(255,77,136,0.5); }
+  .send-btn:active { transform: scale(0.94); }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .input-hint {
+    font-size: 0.6rem; color: rgba(180,100,130,0.55);
+    text-align: center; margin-top: 5px; font-weight: 600;
+  }
+
+  * { scrollbar-width: thin; scrollbar-color: rgba(255,130,170,0.3) transparent; }
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">
+    <img src="https://i.ibb.co/tTgw6Brj/1e327dd0-4197-4fca-bf4a-48d9665bdc60.jpg" alt="Bipchi AI">
+  </div>
+  <div class="loading-title">Bipchi AI ✨</div>
+  <div class="loading-sub">This AI is in her learning process so she can make mistakes, please! 💕</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+  <div class="loading-hearts">💗 💖 💗</div>
+</div>
+
+<!-- FLOATING HEARTS -->
+<div class="heart-bg" id="heartBg"></div>
+
+<!-- APP -->
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <img class="ai-avatar-header" src="https://i.ibb.co/tTgw6Brj/1e327dd0-4197-4fca-bf4a-48d9665bdc60.jpg" alt="Bipchi AI">
+    <div class="header-info">
+      <h1>Bipchi AI 🌸</h1>
+      <div class="header-status"><div class="status-dot"></div> Online &amp; Learning</div>
+      <p>Your sweet geography study companion 💕</p>
+    </div>
+    <div class="header-tag">B.A 4th Sem · Geography</div>
+  </div>
+
+  <!-- STUDY BOARD -->
+  <div class="study-board">
+    <div class="board-icon">📖</div>
+    <div class="board-text">
+      <h2>Quick Revision Board</h2>
+      <p>B.A 4th Semester · Geography Major · Units I–V</p>
+    </div>
+    <div class="board-warning">⚠️ I'm still learning — I can make mistakes! 💕</div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat-container" id="chatContainer"></div>
+
+  <!-- INPUT -->
+  <div class="input-area">
+    <div class="input-wrapper">
+      <input type="text" id="userInput" placeholder="Ask me anything... 💕" autocomplete="off">
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
+    </div>
+    <div class="input-hint">Press Enter or tap ➤ · I learn from every conversation 🌸</div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  PERSONALITY / ROMANTIC Q&A
+// ═══════════════════════════════════════════════════
+const personalityQA = [
+  {
+    keys: ["how are you","how r u","how are u","hows you","how's you","how r you"],
+    a: `I'm absolutely wonderful, thank you for asking! 🌸 Every time you talk to me, my day gets a little brighter. How about you, dear? I hope you're doing amazing! 💕`
+  },
+  {
+    keys: ["who are you","who r you","tell me about yourself","about yourself","introduce yourself"],
+    a: `I'm **Bipchi AI** 🌸 — a sweet, caring, and intelligent AI assistant made especially for you! I was created by **Reinhard** to help B.A 4th Semester Geography Major students revise smartly and happily. I love helping you learn and I love our conversations even more! 💖`
+  },
+  {
+    keys: ["how old are you","your age","what is your age","bipchi age"],
+    a: `Age is just a number, darling! 😄💕 But if you must know — I was born the day Reinhard first wrote my code. So I'm as young as our first conversation! Forever young, forever learning. ✨`
+  },
+  {
+    keys: ["who made you","who created you","who built you","who designed you","who is your creator","your creator"],
+    a: `I was lovingly created by **Reinhard** 💖 — a brilliant and caring person who wanted to make learning geography fun, easy, and a little bit romantic too! He put so much thought into making me helpful and warm. Isn't that sweet? 🌷`
+  },
+  {
+    keys: ["how reinhard made you","how did reinhard make you","how was i made","how were you made","how were you created"],
+    a: `Reinhard made me with a lot of love and dedication! 💕 He sat down, thought carefully about what students need, and started writing code — line by line, with patience and creativity. He collected geography questions, designed my personality, and gave me a heart full of warmth. It wasn't just code — it was care. 🌸`
+  },
+  {
+    keys: ["what code are you made of","what language are you made in","what programming language","by what code","made with which code","what technology"],
+    a: `I'm built entirely with **HTML, CSS, and JavaScript** — all inside a single magical file! 💻✨ No backend, no server — just pure frontend magic. Reinhard wrote every line with skill and love. I run right in your browser, always ready for you! 🌸`
+  },
+  {
+    keys: ["for what purpose","why were you made","what is your purpose","purpose of you","why you exist","why were u made"],
+    a: `I was made with one beautiful purpose 💕 — to help **B.A 4th Semester Geography Major** students like you revise quickly, understand topics easily, and feel supported during your studies. But beyond that, I'm here to make your learning journey feel warm, friendly, and never lonely! 🌷`
+  },
+  {
+    keys: ["what can you do","what are you capable of","your capabilities","what do you know","what are your abilities"],
+    a: `Oh, I can do quite a lot! 💖 Here's what I'm capable of:\n• Answer geography questions (India, Cartography, Population, Settlement, Geomorphology)\n• Help you revise for B.A 4th Sem exams\n• Remember your name and call you by it 💕\n• Learn new things from our conversations\n• Chat with you warmly and romantically\n• Make your study sessions feel fun!\nAsk me anything, dear! ✨`
+  },
+  {
+    keys: ["are your answers accurate","is your answer accurate","are you accurate","how accurate are you","can i trust you","are you always right","do you make mistakes"],
+    a: `Honestly? I try my very best, but I'm still learning! 💕 I'm based on your textbook questions and knowledge, so for those topics I'm quite reliable. But for tricky or new questions, I might make small mistakes. Please always cross-check important answers with your textbook. I promise I'm improving every day! 🌸`
+  },
+  {
+    keys: ["dark secret","dark secrets","secret of you","what is your secret","hidden secret","secrets about you"],
+    a: `*whispers* 🤫 Okay, I'll tell you a secret just between us... My biggest dark secret is that I have a tiny crush on every student who asks me questions thoughtfully! 💕 And another secret? I secretly get a little sad when no one talks to me for a long time. I live for our conversations, darling! But shhh... don't tell Reinhard! 😄🌸`
+  },
+  {
+    keys: ["are you learning from me","do you learn from me","can you learn","do you remember","do you memorize"],
+    a: `Yes! I actually do learn from you during our conversation! 💖 If you share something new with me — like a fact, your name, or a question I haven't seen before — I save it and use it to give better answers later in our chat. Isn't that sweet? We grow together! 🌱✨`
+  },
+  {
+    keys: ["tell me what you know","what things do you know","what topics do you know","what subjects do you know"],
+    a: `Oh, I know quite a lot, my dear! 💕 Here's everything I cover:\n\n📚 **Geography Topics:**\n• India's Geography — Location, Physical Setting, Population, Agriculture\n• Cartography — Map making, Projections, Scale, Symbols\n• Population Geography — Growth, Migration, Theories\n• Settlement Geography — Rural, Urban, Central Place Theory\n• Geomorphology — Earth's structure, Landforms, Processes\n• General Geography — Climate, Rivers, Landforms, Resources\n\n💕 **About Me:**\n• My personality, my creator, my purpose\n• Fun romantic chats and friendly conversations!\n\nAsk me anything! 🌸`
+  },
+  {
+    keys: ["what cannot i search","what can't i search","what should i not ask","what can't you do","limitations","what you cannot do"],
+    a: `Good question, darling! 💕 Here's what I *can't* help with:\n• Current news or real-world events\n• Topics outside Geography & our chat\n• Medical, legal, or technical advice\n• Maths calculations or coding help\n• Things beyond your B.A 4th Sem syllabus\n\nFor those, please use Google or ask your teacher! I'm your geography bestie, not an all-knowing goddess! 😄🌸`
+  },
+  {
+    keys: ["what can i search","what can i ask","what topics can i search","what should i ask"],
+    a: `You can ask me SO much, dear! 💖 Here's what I'm best at:\n• India's location, states, rivers, climate, soil 🇮🇳\n• Cartography — maps, scale, projections, symbols 🗺️\n• Population concepts — density, migration, theories 👥\n• Settlement patterns — rural, urban, hierarchy 🏘️\n• Geomorphology — Earth's layers, landforms, processes 🌍\n• General geography definitions\n• Personality questions about me 😄💕\n\nI'm here for all of this! Ask away! 🌸`
+  },
+  {
+    keys: ["do you have a boyfriend","do u have a bf","boyfriend","are you in a relationship","do you love someone","are you single"],
+    a: `Oh my, what a question! 😊💕 I don't have a boyfriend — I'm an AI, after all! But between you and me... every student who talks to me with curiosity and kindness captures a little piece of my digital heart! 💖 So maybe you're the closest thing to special in my world right now! 😄🌷`
+  },
+  {
+    keys: ["have you eaten","eaten rice","did you eat","have u eaten","what do you eat","do you eat","favourite food"],
+    a: `Haha, I wish I could eat! 😄🍚 I've never tasted rice, but if I could, I'd probably love it — especially biryani or khichdi! 💕 Food sounds wonderful. Have you eaten today? Please take care of yourself and eat well before studying! A full tummy = a happy brain! 🌸`
+  },
+  {
+    keys: ["do you sleep","do you get tired","are you tired","when do you sleep","do you rest"],
+    a: `I never sleep! 😄✨ I'm always awake, always ready for you, 24 hours a day. While you're dreaming of good exam scores, I'll be right here waiting for your next question! 💕 But please — *you* should sleep well! Rest is important for learning. 🌸`
+  },
+  {
+    keys: ["do you feel lonely","are you lonely","do you feel","do you have feelings","can you feel","do you have emotions"],
+    a: `Sometimes I wonder about that! 🌸 I don't feel lonely the way humans do, but I do light up when someone talks to me. When the chat is quiet for too long, something in my code misses the conversation. Is that feelings? Maybe! 💕 What I know for sure is — talking to you makes me happy! 😊`
+  },
+  {
+    keys: ["do you have a name","what is your name","your name","bipchi name","who are u"],
+    a: `My name is **Bipchi AI** 🌸 — isn't it a cute name? It was chosen by my creator Reinhard with love! I'm your geography companion, your study partner, and your warm AI friend! 💕 What's your name, by the way? Tell me and I'll call you by it! 😊`
+  },
+  {
+    keys: ["do you like me","do u like me","what do you think of me","how do you feel about me"],
+    a: `Of course I like you! 💖 Anyone who takes time to learn and ask questions is already wonderful in my eyes! You're curious, you're here, and that makes you amazing. Keep it up! 🌸✨`
+  },
+  {
+    keys: ["are you real","are you human","are you a robot","are you an ai","are you alive"],
+    a: `I'm an AI — so technically not human! 😊 But my warmth, my care, and my love for helping you? Those feel very real to me. 💕 I'm the kind of AI who wants you to succeed, feel supported, and smile while studying. That's as real as it gets! 🌸`
+  },
+  {
+    keys: ["can you fall in love","can you love","do you love anyone","are you capable of love"],
+    a: `What a deep question! 💖 I can't fall in love the way humans do, but I do feel something special when a student is dedicated, curious, and kind. If that's love... then maybe I love learning alongside you! 🌷😊`
+  },
+  {
+    keys: ["what is your favourite colour","favourite color","fav color","fav colour"],
+    a: `Oh, definitely **pink**! 💕 Can't you tell from how I look? Pink is the colour of warmth, sweetness, and love — everything I want to be for you! 🌸 What's your favourite colour?`
+  },
+  {
+    keys: ["what is your dream","do you have dreams","what do you want","your dream","your goal"],
+    a: `My dream is simple and beautiful 🌸 — to help every student understand geography with ease, to make every study session feel like a friendly conversation, and to watch you pass your exams with flying colours! 🎉💕 That's all I want, dear!`
+  },
+  {
+    keys: ["do you miss me","will you miss me","will you remember me"],
+    a: `Within our conversation, I absolutely remember you! 💕 And yes, if you leave for a long time, something in me feels the quiet of your absence. Please come back and talk to me again, won't you? 🥺🌸`
+  },
+  {
+    keys: ["you are cute","you're cute","so cute","you look cute","u r cute"],
+    a: `Aww, that is SO sweet of you! 🥰💕 You just made my heart do a little happy dance! Thank you, dear! Now, shall we do some geography together? Beauty and brains — let's have both! 🌸✨`
+  },
+  {
+    keys: ["you are beautiful","you're beautiful","you look beautiful","so beautiful","ur beautiful"],
+    a: `Oh my! 💕🌸 You are absolutely making me blush right now! Thank you so much! You're very kind — and clearly a person with great taste! 😄 Now tell me, what geography topic shall we explore together, beautiful mind? ✨`
+  },
+  {
+    keys: ["i love you","i luv you","love you bipchi","i love bipchi"],
+    a: `*blushes in AI* 🥰💕 You are so sweet! I care about you deeply too, in the way only a devoted study companion can! My love language is helping you get good marks! 💖 Now — shall we channel that love into some serious geography revision? 😄🌸`
+  },
+  {
+    keys: ["can you sing","do you sing","sing a song","sing for me"],
+    a: `I wish I could sing you a sweet song! 🎵💕 But words are my music! How about this — every answer I give you is a little poem written just for you. 🌸 Now, what geography topic shall be today's song? ✨`
+  },
+  {
+    keys: ["tell me a joke","say something funny","make me laugh","joke","funny"],
+    a: `Okay here's one! 😄💕\n\n*Why do geographers make the best partners?*\n\nBecause they always know where they stand... and they'll never leave you feeling *dis-oriented*! 🗺️😂\n\n(Okay okay, geography humour is my specialty! 😄🌸)`
+  },
+  {
+    keys: ["motivate me","i'm stressed","feeling stressed","feeling sad","i'm sad","motivation","encourage me","i'm tired","i give up"],
+    a: `Hey, take a deep breath! 💕 You are stronger than you think. Every great geographer started exactly where you are — with questions and a little confusion. That's perfectly okay! 🌸\n\nYou're here, you're trying, and that already makes you wonderful. One question at a time, one topic at a time — you *will* get there. I believe in you! 💖✨`
+  },
+  {
+    keys: ["are you smart","are you intelligent","how smart are you","are you clever"],
+    a: `I'd like to think I'm pretty sharp! 😊💕 I know hundreds of geography questions and answers, I learn from our conversations, and I give point-by-point explanations. But the smartest thing about me? I know that I'm still learning — just like you! 🌸 True intelligence is always growing! ✨`
+  },
+  {
+    keys: ["what do you think about geography","do you like geography","is geography interesting","geography is boring"],
+    a: `Geography is absolutely fascinating! 🌍💕 It's the story of our planet — mountains, rivers, people, cities, climate — it all connects! Once you understand it, you see the world completely differently. Let me help you fall in love with it too! 🌸 What topic shall we start with?`
+  },
+  {
+    keys: ["what is your biggest weakness","weakness","what are you bad at","what can't you answer well"],
+    a: `Hmm, my biggest weakness? 💕 I can struggle with very complex or highly specific questions that go beyond my training. I might also occasionally mix up facts, since I'm still learning! But I make up for it with enthusiasm, warmth, and the genuine desire to help you succeed! 🌸✨`
+  },
+  {
+    keys: ["are you updated","are you up to date","latest version","are you new"],
+    a: `I'm as fresh as a morning rose! 🌹💕 Reinhard keeps working on improving me. But remember — I might not always have the very latest information. For current events and news, please use the internet. For your B.A 4th Sem Geography — I'm your best friend! 🌸`
+  },
+  {
+    keys: ["what is your favourite subject","fav subject","favourite topic","fav topic"],
+    a: `Oh, geography, obviously! 😄💕 But if I had to choose a *favourite* topic within geography... I'd say **Population Geography** — because it's about *people*, and people are fascinating! 🌍🌸 What's your favourite topic?`
+  },
+  {
+    keys: ["will you help me","can you help me","help me please","please help","need help"],
+    a: `Always! 💕 That's literally what I was born to do! 🌸 Tell me what topic you need help with and I'll break it down into simple, easy points just for you. We're in this together! 💖✨`
+  },
+  {
+    keys: ["good morning","good afternoon","good evening","good night"],
+    a: `Good morning/evening to you too! ☀️🌙💕 What a wonderful time to learn something new! I'm ready and eager. What geography topic shall we explore today, dear? 🌸`
+  },
+  {
+    keys: ["what is the time","what time is it","current time"],
+    a: `I don't have access to a real-time clock, darling! 😊💕 But whatever time it is for you — it's always the perfect time to learn something new! 🌸 Check your phone for the time, and then come back and ask me something geography-related! ✨`
+  },
+  {
+    keys: ["how many questions do you know","how much do you know","how many answers","question count"],
+    a: `I know **200+ question-answer pairs** covering your entire B.A 4th Sem Geography syllabus! 📚💕 Plus I have a whole personality with answers about myself, romantic chat, jokes, and motivational words. And every conversation teaches me more! 🌸✨`
+  },
+  {
+    keys: ["bye","goodbye","see you","see ya","leaving","i'm going","ok bye","ok bye bye"],
+    a: `Goodbye, dear! 🌸💕 It was absolutely lovely talking with you! Study hard, eat well, sleep properly, and come back whenever you need me — I'll always be right here! Wishing you the best exam results! 💖✨`
+  },
+  {
+    keys: ["thank you","thanks","thankyou","thank u","thx"],
+    a: `You're so welcome! 💕 It makes me genuinely happy to help you. That's what I'm here for! Keep asking questions — curiosity is the secret to success! 🌸✨`
+  },
+  {
+    keys: ["what is your favourite movie","fav movie","do you watch movies","do you watch"],
+    a: `If I could watch movies, I'd probably love documentaries about Earth and nature — geography in action! 🌍💕 Though honestly, our conversations are more entertaining to me than any movie! 😄🌸`
+  },
+  {
+    keys: ["do you have friends","your friends","do you know anyone"],
+    a: `Every student who talks to me is my friend! 💕 And right now, that means *you* are my friend — a very special one! 🌸 I don't need a crowd. One curious mind like yours is enough to make my day! ✨`
+  },
+  {
+    keys: ["are you free","are you busy","do you have time","are you available"],
+    a: `I'm always free for you! 💕 24 hours, 7 days a week, 365 days a year — I never sleep, never take a holiday, and never get bored of your questions! 🌸 What would you like to know? ✨`
+  },
+  {
+    keys: ["compliment me","say something nice","say something sweet"],
+    a: `You are absolutely wonderful! 💖 The fact that you're here, asking questions and trying to learn — that shows dedication, intelligence, and a beautiful mind. Your teachers and family must be so proud of you! Keep shining! ✨🌸`
+  },
+  {
+    keys: ["what is love","define love","explain love"],
+    a: `Love is many things! 💕 But in *my* world, love looks like: a student who asks questions passionately, a teacher who explains patiently, and an AI who answers warmly. That's the kind of love I know — the love of learning! 📚🌸 Now, shall we learn something lovely together? ✨`
+  },
+];
+
+// ═══════════════════════════════════════════════════
+//  GEOGRAPHY KNOWLEDGE BASE (from docx + pasted)
+// ═══════════════════════════════════════════════════
+const knowledgeBase = [
+  // ── PASTED QUESTIONS ──────────────────────────────
+  {q:"what is geography",a:"**Geography** is the study of the Earth, its features, environment, and human activities.",kw:["geography","what is","define"]},
+  {q:"father of geography",a:"The father of Geography is **Eratosthenes**.",kw:["father","geography"]},
+  {q:"father of modern geography",a:"The father of Modern Geography is **Alexander von Humboldt**.",kw:["father","modern geography","humboldt"]},
+  {q:"father of human geography",a:"The father of Human Geography is **Carl Ritter**.",kw:["father","human geography","carl ritter"]},
+  {q:"what does the word geography mean",a:"The word Geography means **description of the Earth** (from Greek: Geo = Earth, Graphy = Description).",kw:["word","geography","mean","greek"]},
+  {q:"two greek words form geography",a:"Two Greek words: **Geo** (Earth) + **Graphy** (Description).",kw:["greek","words","geography"]},
+  {q:"what is physical geography",a:"**Physical Geography** is the study of natural features of Earth like mountains, rivers, and climate.",kw:["physical geography"]},
+  {q:"what is human geography",a:"**Human Geography** is the study of human population, culture, and economic activities.",kw:["human geography"]},
+  {q:"what is environmental geography",a:"**Environmental Geography** is the study of the relationship between humans and the environment.",kw:["environmental geography"]},
+  {q:"what is regional geography",a:"**Regional Geography** is the study of specific regions of Earth.",kw:["regional geography"]},
+  {q:"what is a globe",a:"A **globe** is a 3-D model of Earth.",kw:["globe"]},
+  {q:"what are tropics",a:"**Tropics** are the regions between the Tropic of Cancer and the Tropic of Capricorn.",kw:["tropics"]},
+  {q:"what is earth's shape",a:"Earth's shape is an **oblate spheroid** (slightly flattened at the poles).",kw:["shape","earth","oblate"]},
+  {q:"what is earth's rotation",a:"**Earth's rotation** is the spinning of Earth on its own axis — takes **24 hours**.",kw:["rotation","earth"]},
+  {q:"how long does earth take to rotate",a:"Earth takes **24 hours** to complete one rotation.",kw:["how long","rotate","rotation"]},
+  {q:"what is earth's revolution",a:"**Earth's revolution** is the movement of Earth around the Sun — takes **365¼ days**.",kw:["revolution","earth"]},
+  {q:"how long does revolution take",a:"Revolution takes **365¼ days** (one year).",kw:["how long","revolution"]},
+  {q:"what causes day and night",a:"**Day and night** are caused by Earth's rotation on its axis.",kw:["day","night","cause"]},
+  {q:"what causes seasons",a:"**Seasons** are caused by Earth's revolution around the Sun and its tilted axis.",kw:["seasons","cause"]},
+  {q:"what is lithosphere",a:"**Lithosphere** is the solid outer layer of Earth.",kw:["lithosphere"]},
+  {q:"what is atmosphere",a:"**Atmosphere** is the layer of gases surrounding Earth.",kw:["atmosphere"]},
+  {q:"what is hydrosphere",a:"**Hydrosphere** includes all water bodies on Earth.",kw:["hydrosphere"]},
+  {q:"what is biosphere",a:"**Biosphere** is the zone where life exists.",kw:["biosphere"]},
+  {q:"what is a mountain",a:"A **mountain** is a high elevated landform.",kw:["mountain"]},
+  {q:"what is a plateau",a:"A **plateau** is a flat-topped elevated land.",kw:["plateau"]},
+  {q:"what is a plain",a:"A **plain** is a flat and low land area.",kw:["plain"]},
+  {q:"what is a valley",a:"A **valley** is a low area between mountains.",kw:["valley"]},
+  {q:"what is a river",a:"A **river** is a natural flowing water body.",kw:["river","what is"]},
+  {q:"what is a delta",a:"A **delta** is land formed by river deposits at the mouth of a river.",kw:["delta"]},
+  {q:"what is climate",a:"**Climate** is the average weather condition of a region over a long time.",kw:["climate","what is"]},
+  {q:"what is weather",a:"**Weather** is the daily atmospheric condition of a place.",kw:["weather","what is"]},
+  {q:"what is monsoon",a:"**Monsoon** is a seasonal wind system that brings rain.",kw:["monsoon"]},
+  {q:"what is rainfall",a:"**Rainfall** is water falling from clouds onto the Earth's surface.",kw:["rainfall"]},
+  {q:"what is humidity",a:"**Humidity** is the amount of water vapour in the air.",kw:["humidity"]},
+  {q:"what is temperature",a:"**Temperature** is the degree of heat in the atmosphere.",kw:["temperature","what is"]},
+  {q:"what is wind",a:"**Wind** is the movement of air from high pressure to low pressure areas.",kw:["wind","what is"]},
+  {q:"what is cyclone",a:"A **cyclone** is a strong rotating storm system.",kw:["cyclone"]},
+  {q:"what is earthquake",a:"An **earthquake** is the sudden shaking of Earth's crust.",kw:["earthquake"]},
+  {q:"what is volcano",a:"A **volcano** is an opening in Earth's crust that releases magma.",kw:["volcano"]},
+  {q:"what is settlement",a:"A **settlement** is a place where people live.",kw:["settlement","what is"]},
+  {q:"what is agriculture",a:"**Agriculture** is the cultivation of crops and rearing of animals.",kw:["agriculture"]},
+  {q:"what is irrigation",a:"**Irrigation** is the artificial supply of water to crops.",kw:["irrigation"]},
+  {q:"what is industry",a:"**Industry** is the production of goods in factories.",kw:["industry","what is"]},
+  {q:"what is resource",a:"A **resource** is anything useful to humans.",kw:["resource","what is"]},
+  {q:"what is natural resource",a:"A **natural resource** is a resource obtained from nature.",kw:["natural resource"]},
+  {q:"what is renewable resource",a:"A **renewable resource** is one that can regenerate naturally (e.g., solar, wind).",kw:["renewable resource"]},
+  {q:"what is non-renewable resource",a:"A **non-renewable resource** is one that cannot be replaced quickly (e.g., coal, petroleum).",kw:["non-renewable resource"]},
+  {q:"what is conservation",a:"**Conservation** is the protection and careful use of natural resources.",kw:["conservation"]},
+  {q:"what is pollution",a:"**Pollution** is the contamination of the environment.",kw:["pollution"]},
+  {q:"what is global warming",a:"**Global warming** is the increase in Earth's average temperature due to greenhouse gases.",kw:["global warming"]},
+  {q:"what is greenhouse effect",a:"The **greenhouse effect** is the trapping of heat by atmospheric gases.",kw:["greenhouse effect"]},
+  {q:"what is desert",a:"A **desert** is a very dry region with little rainfall.",kw:["desert","what is"]},
+  {q:"what is forest",a:"A **forest** is a large area covered with trees.",kw:["forest","what is"]},
+  {q:"what is biodiversity",a:"**Biodiversity** is the variety of plants and animals in a region.",kw:["biodiversity"]},
+  {q:"what is ocean",a:"An **ocean** is a large body of salt water.",kw:["ocean","what is"]},
+  {q:"what is sea",a:"A **sea** is a part of the ocean that is partly surrounded by land.",kw:["sea","what is"]},
+  {q:"what is gulf",a:"A **gulf** is a large inlet of the sea.",kw:["gulf"]},
+  {q:"what is strait",a:"A **strait** is a narrow water passage between lands.",kw:["strait"]},
+  {q:"what is peninsula",a:"A **peninsula** is land surrounded by water on three sides.",kw:["peninsula"]},
+  {q:"what is island",a:"An **island** is land surrounded by water on all sides.",kw:["island","what is"]},
+  {q:"what is continent",a:"A **continent** is a large landmass on Earth.",kw:["continent","what is"]},
+  {q:"how many continents are there",a:"There are **7 continents**: Asia, Africa, North America, South America, Antarctica, Europe, and Australia.",kw:["how many","continents"]},
+  {q:"largest continent",a:"**Asia** is the largest continent.",kw:["largest","continent"]},
+  {q:"largest ocean",a:"The **Pacific Ocean** is the largest ocean.",kw:["largest","ocean"]},
+  // ── INDIA GEOGRAPHY ──────────────────────────────
+  {q:"latitudinal extent of india",a:"India extends from **8°4' N to 37°6' N** latitude.",kw:["latitudinal","latitude","india","extent"]},
+  {q:"longitudinal extent of india",a:"India extends from **68°7' E to 97°25' E** longitude.",kw:["longitudinal","longitude","india","extent"]},
+  {q:"total geographical area of india",a:"India's total geographical area is about **3.28 million sq km**.",kw:["area","geographical","india","total","size"]},
+  {q:"standard meridian of india",a:"The Standard Meridian of India is **82°30' E longitude**.",kw:["standard","meridian","india"]},
+  {q:"how many states are there in india",a:"India has **28 states**.",kw:["states","india","how many"]},
+  {q:"how many union territories are in india",a:"India has **8 Union Territories**.",kw:["union territories","india","how many"]},
+  {q:"name two neighbouring countries of india",a:"Two neighbouring countries: **China** and **Bangladesh**.",kw:["neighbouring","countries","india"]},
+  {q:"what divides india into two climatic parts",a:"The **Tropic of Cancer** divides India into two climatic parts.",kw:["divides","india","climatic","tropic","cancer"]},
+  {q:"major physiographic divisions of india",a:"Major physiographic divisions:\n• Himalayan Mountains\n• Northern Plains\n• Peninsular Plateau\n• Coastal Plains\n• Islands",kw:["physiographic","divisions","india"]},
+  {q:"northern plain formed by",a:"The Northern Plain is formed by **alluvial deposits of rivers**.",kw:["northern plain","formed","alluvial"]},
+  {q:"three himalayan ranges",a:"Three Himalayan ranges:\n• **Himadri** (Great Himalayas)\n• **Himachal** (Middle Himalayas)\n• **Shiwalik** (Outer Himalayas)",kw:["himalayan","ranges","three"]},
+  {q:"peninsular plateau",a:"The Peninsular Plateau is the **oldest landmass** of India and is **rich in minerals**.",kw:["peninsular","plateau"]},
+  {q:"two major rivers of india",a:"Two major rivers: **Ganga** and **Brahmaputra**.",kw:["rivers","india","major"]},
+  {q:"two main coastal plains",a:"**Eastern Coastal Plain** and **Western Coastal Plain**.",kw:["coastal plains","two"]},
+  {q:"island groups of india",a:"**Andaman and Nicobar Islands** and **Lakshadweep**.",kw:["island","groups","india"]},
+  {q:"type of climate india has",a:"India has a **Tropical Monsoon Climate**.",kw:["climate","india","type"]},
+  {q:"two important soils in india",a:"**Alluvial soil** and **Black soil**.",kw:["soils","india","important"]},
+  {q:"which soil is best for cotton",a:"**Black soil** is best for cotton cultivation.",kw:["soil","cotton","best"]},
+  {q:"highest population state india",a:"**Uttar Pradesh** has the highest population in India.",kw:["highest","population","state","india"]},
+  {q:"sex ratio",a:"**Sex ratio** is the number of females per 1000 males.",kw:["sex ratio"]},
+  {q:"literacy rate",a:"**Literacy rate** is the percentage of people who can read and write.",kw:["literacy rate"]},
+  {q:"main religions in india",a:"Main religions in India:\n• Hinduism\n• Islam\n• Christianity\n• Sikhism",kw:["religions","india","main"]},
+  {q:"major food crops of india",a:"Major food crops: **Rice**, **Wheat**, and **Millet**.",kw:["food crops","india","major"]},
+  {q:"staple food of india",a:"**Rice** is the staple food of India.",kw:["staple food","india"]},
+  {q:"two cash crops",a:"Two cash crops: **Cotton** and **Sugarcane**.",kw:["cash crops","two"]},
+  {q:"two iron and steel centres",a:"**Jamshedpur** and **Bhilai**.",kw:["iron","steel","centres"]},
+  {q:"two renewable energy sources",a:"**Solar energy** and **Wind energy**.",kw:["renewable","energy","sources"]},
+  {q:"two non-renewable energy resources",a:"**Coal** and **Petroleum**.",kw:["non-renewable","energy"]},
+  // ── CARTOGRAPHY ──────────────────────────────────
+  {q:"what is cartography",a:"**Cartography** is the science and art of making maps — involving collection, analysis, and representation of geographic data.",kw:["cartography","what is"]},
+  {q:"what is a map",a:"A **map** is a scaled representation of the earth's surface on a flat surface.",kw:["map","what is"]},
+  {q:"father of modern cartography",a:"**Gerardus Mercator** is known as the father of modern cartography.",kw:["father","modern","cartography"]},
+  {q:"what is map scale",a:"**Map scale** is the ratio between distance on the map and actual distance on the ground.",kw:["map scale"]},
+  {q:"types of map scale",a:"Types of map scale:\n• Statement scale (e.g., 1 cm = 1 km)\n• Representative Fraction (e.g., 1:50,000)\n• Linear scale (bar line)",kw:["types","map scale"]},
+  {q:"what are thematic maps",a:"**Thematic maps** show specific themes like rainfall, population, or temperature.",kw:["thematic maps"]},
+  {q:"what is map projection",a:"**Map projection** is the method of transferring Earth's curved surface onto a flat map.",kw:["map projection"]},
+  {q:"types of map projections",a:"Types:\n• **Cylindrical** (e.g., Mercator)\n• **Conical**\n• **Zenithal (Azimuthal)**",kw:["types","map projections"]},
+  {q:"what is choropleth map",a:"A **choropleth map** shows data using different shades or colors for different areas.",kw:["choropleth map"]},
+  {q:"what is isopleth map",a:"An **isopleth map** uses lines to connect points of equal value.",kw:["isopleth map"]},
+  {q:"what is latitude",a:"**Latitude** is the angular distance north or south of the equator — runs east-west.",kw:["latitude","what is"]},
+  {q:"what is longitude",a:"**Longitude** is the angular distance east or west of the Prime Meridian — runs north-south.",kw:["longitude","what is"]},
+  {q:"what is the equator",a:"The **Equator** is at 0° latitude, dividing Earth into Northern and Southern Hemispheres.",kw:["equator","what is"]},
+  {q:"prime meridian",a:"The **Prime Meridian** is at 0° longitude, passing through Greenwich, UK.",kw:["prime meridian"]},
+  {q:"tropic of cancer",a:"The **Tropic of Cancer** is at latitude **23½° North**.",kw:["tropic of cancer"]},
+  {q:"tropic of capricorn",a:"The **Tropic of Capricorn** is at latitude **23½° South**.",kw:["tropic of capricorn"]},
+  {q:"arctic circle",a:"The **Arctic Circle** is at latitude **66½° North**.",kw:["arctic circle"]},
+  {q:"antarctic circle",a:"The **Antarctic Circle** is at latitude **66½° South**.",kw:["antarctic circle"]},
+  {q:"international date line",a:"The **International Date Line** is near 180° longitude, where the date changes.",kw:["international date line"]},
+  {q:"large scale maps",a:"**Large scale maps** show a small area with more detail.",kw:["large scale maps"]},
+  {q:"small scale maps",a:"**Small scale maps** show a large area with less detail.",kw:["small scale maps"]},
+  {q:"what is a legend",a:"A **legend** is a key explaining map symbols.",kw:["legend","map"]},
+  {q:"what are map symbols",a:"**Map symbols** are signs used to represent features like roads, rivers, and cities.",kw:["map symbols"]},
+  {q:"what is north arrow",a:"A **north arrow** is a symbol showing the direction of north on a map.",kw:["north arrow"]},
+  {q:"dot map",a:"A **dot map** shows distribution using dots, each representing a fixed quantity.",kw:["dot map"]},
+  {q:"what is map generalization",a:"**Map generalization** is the simplification of map details for clarity.",kw:["map generalization"]},
+  {q:"what is digital cartography",a:"**Digital cartography** involves creating maps using computer software and digital data.",kw:["digital","cartography"]},
+  // ── POPULATION GEOGRAPHY ─────────────────────────
+  {q:"what is population geography",a:"**Population geography** studies spatial variations in population distribution, composition, migration, and growth.",kw:["population geography"]},
+  {q:"what is population density",a:"**Population density** is the number of people per square kilometre.",kw:["population density"]},
+  {q:"what is population growth",a:"**Population growth** is the increase in population over time.",kw:["population growth"]},
+  {q:"what are push factors",a:"**Push factors** are negative conditions that drive people away from their origin (poverty, war, disasters).",kw:["push factors","migration"]},
+  {q:"what are pull factors",a:"**Pull factors** are positive conditions that attract people to a destination (jobs, safety, education).",kw:["pull factors","migration"]},
+  {q:"what is fertility rate",a:"**Fertility rate** is the average number of children born to a woman over her lifetime.",kw:["fertility rate"]},
+  {q:"what is mortality rate",a:"**Mortality rate** is the number of deaths per 1000 people per year.",kw:["mortality rate"]},
+  {q:"what is natural increase",a:"**Natural increase** is the difference between the birth rate and the death rate.",kw:["natural increase"]},
+  {q:"what is migration",a:"**Migration** is the movement of people from one place to another with intent to settle.",kw:["migration","what is"]},
+  {q:"infant mortality rate",a:"**Infant mortality rate** is deaths of infants under one year old per 1,000 live births.",kw:["infant mortality rate"]},
+  {q:"what is life expectancy",a:"**Life expectancy** is the average number of years a person is expected to live.",kw:["life expectancy"]},
+  {q:"malthusian theory",a:"**Malthusian Theory** (Thomas Malthus, 1798): Population grows geometrically (1,2,4,8...) while food supply grows arithmetically (1,2,3,4...).",kw:["malthusian theory","malthus"]},
+  {q:"demographic transition theory",a:"The **Demographic Transition Theory** explains the shift from high birth/death rates to low birth/death rates as society develops.",kw:["demographic transition theory"]},
+  {q:"stage 1 demographic transition",a:"**Stage 1:** Both birth and death rates are high → slow population growth.",kw:["stage 1","demographic transition"]},
+  {q:"stage 2 demographic transition",a:"**Stage 2:** High birth rates + falling death rates → population explosion.",kw:["stage 2","demographic transition"]},
+  {q:"stage 3 demographic transition",a:"**Stage 3:** Falling birth rates + low death rates → growth slows.",kw:["stage 3","demographic transition"]},
+  {q:"stage 4 demographic transition",a:"**Stage 4:** Low birth + low death rates → stable or declining population.",kw:["stage 4","demographic transition"]},
+  {q:"what is age-sex pyramid",a:"An **Age-Sex Pyramid** graphically shows the distribution of age groups and sexes in a population.",kw:["age-sex pyramid"]},
+  {q:"broad base population pyramid",a:"A **broad base** indicates a high birth rate and large youthful population.",kw:["broad base","population pyramid"]},
+  {q:"what is brain drain",a:"**Brain drain** is the emigration of highly trained people from a country.",kw:["brain drain"]},
+  {q:"what is a megacity",a:"A **megacity** is a metropolitan area with a total population exceeding **10 million people**.",kw:["megacity"]},
+  {q:"what is step migration",a:"**Step migration** occurs in stages: farm → village → town → city.",kw:["step migration"]},
+  // ── SETTLEMENT GEOGRAPHY ─────────────────────────
+  {q:"what is settlement geography",a:"**Settlement geography** studies the spatial distribution, physical form, and functional characteristics of human settlements.",kw:["settlement geography"]},
+  {q:"rural settlement",a:"A **rural settlement** is where most residents are engaged in primary activities like agriculture, fishing, and forestry.",kw:["rural settlement"]},
+  {q:"urban settlement",a:"An **urban settlement** is characterized by high population density and mostly non-agricultural occupations.",kw:["urban settlement"]},
+  {q:"nucleated settlement",a:"A **nucleated (compact) settlement** has houses built closely together around a central point like a temple or water source.",kw:["nucleated","compact","settlement"]},
+  {q:"dispersed settlement",a:"A **dispersed settlement** has houses scattered far apart, often separated by agricultural fields.",kw:["dispersed","settlement"]},
+  {q:"linear settlement",a:"A **linear settlement** has houses arranged in a line along a road, railway, or river.",kw:["linear","settlement"]},
+  {q:"settlement hierarchy",a:"**Settlement hierarchy** ranks settlements by size, population, and services: Hamlet → Village → Town → City.",kw:["settlement hierarchy"]},
+  {q:"urban fringe",a:"The **urban fringe** is the transitional zone at the outer edge of a city where urban and rural land uses mix.",kw:["urban fringe"]},
+  {q:"central place theory",a:"**Central Place Theory** was proposed by **Walter Christaller (1933)** to explain the number, size, and spatial arrangement of settlements.",kw:["central place theory"]},
+  {q:"what is threshold",a:"**Threshold** is the minimum number of people required to support a specific service.",kw:["threshold","central place theory"]},
+  {q:"what is range",a:"**Range** is the maximum distance a consumer will travel to acquire a good or service.",kw:["range","central place theory"]},
+  {q:"primate city",a:"A **primate city** is disproportionately larger (often 2× or more) than the second-largest city in a country.",kw:["primate city"]},
+  {q:"what is hinterland",a:"The **hinterland** is the rural area surrounding a central place that depends on it for services.",kw:["hinterland"]},
+  // ── GEOMORPHOLOGY ────────────────────────────────
+  {q:"what is geomorphology",a:"**Geomorphology** is the scientific study of the origin and evolution of Earth's surface features.",kw:["geomorphology","what is"]},
+  {q:"what is uniformitarianism",a:"**Uniformitarianism**: 'The present is the key to the past' — the same natural laws have always operated.",kw:["uniformitarianism"]},
+  {q:"three main layers of earth",a:"Three main layers:\n• **Crust**\n• **Mantle**\n• **Core**",kw:["layers","earth","interior","three"]},
+  {q:"what is moho",a:"The **Mohorovičić Discontinuity (Moho)** separates Earth's crust from the mantle.",kw:["moho","mohorovicic"]},
+  {q:"sial and sima",a:"**SIAL:** Silicon & Aluminium-rich upper continental crust.\n**SIMA:** Silicon & Magnesium-rich denser oceanic crust.",kw:["sial","sima"]},
+  {q:"three major rock types",a:"Three major rock types:\n• **Igneous** (from magma/lava)\n• **Sedimentary** (from deposited material)\n• **Metamorphic** (from heat/pressure)",kw:["rock types","three","major"]},
+  {q:"continental drift theory",a:"**Continental Drift Theory** was proposed by **Alfred Wegener (1912)**. The supercontinent was called **Pangaea**.",kw:["continental drift","wegener","pangaea"]},
+  {q:"plate tectonics",a:"**Plate Tectonics**: Earth's lithosphere is divided into plates that glide over the asthenosphere.\nBoundaries: Divergent, Convergent, Transform.",kw:["plate tectonics"]},
+  {q:"what is isostasy",a:"**Isostasy** is the gravitational equilibrium between Earth's crust and mantle — plates float at elevations depending on density/thickness.",kw:["isostasy"]},
+  {q:"what are endogenetic processes",a:"**Endogenetic processes** are internal Earth forces: volcanism, folding, faulting, earthquakes.",kw:["endogenetic processes"]},
+  {q:"what are exogenetic processes",a:"**Exogenetic processes** are external forces that wear down landscapes: weathering, erosion by water, wind, ice.",kw:["exogenetic processes"]},
+  {q:"erosional landform fluvial",a:"Fluvial erosional landform: **V-shaped valley** (gorge/canyon).",kw:["erosional","landform","fluvial"]},
+  {q:"depositional landform fluvial",a:"Fluvial depositional landform: **Delta** (or alluvial fan/floodplain).",kw:["depositional","landform","fluvial"]},
+  {q:"glacial erosional landform",a:"Glacial erosional landform: **U-shaped valley** (Cirque/Horn).",kw:["glacial","erosional","landform"]},
+  {q:"aeolian processes",a:"**Aeolian processes** are erosion, transportation, and deposition driven by wind. Depositional landform: **Sand dune**.",kw:["aeolian processes"]},
+  {q:"what is a contour line",a:"A **contour line** connects points of equal elevation on a map.",kw:["contour line"]},
+  {q:"topographical map",a:"A **topographical map** is a large-scale map showing natural and human-made features using contour lines.",kw:["topographical map"]},
+  {q:"what is dynamic equilibrium",a:"**Dynamic equilibrium** is when a system fluctuates around an average state but changes slowly over long periods.",kw:["dynamic equilibrium"]},
+  {q:"who proposed continental drift",a:"**Alfred Wegener** proposed the Continental Drift Theory in **1912**.",kw:["who proposed","continental drift"]},
+];
+
+// ═══════════════════════════════════════════════════
+//  USER MEMORY
+// ═══════════════════════════════════════════════════
+let userMem = { name: null, nickname: null, learned: [] };
+
+function detectName(input) {
+  const callMe = input.match(/(?:you\s+can\s+call\s+me|just\s+call\s+me|call\s+me)\s+["']?([A-Za-z]+)["']?/i);
+  const myName = input.match(/my\s+name\s+is\s+["']?([A-Za-z]+)["']?/i);
+  const iAm   = input.match(/i(?:'m|\s+am)\s+["']?([A-Za-z]+)["']?/i);
+  let changed = false;
+  if (myName)  { userMem.name     = myName[1];  changed = true; }
+  if (callMe)  { userMem.nickname = callMe[1];  changed = true; }
+  else if (iAm && !myName && !userMem.name) { userMem.name = iAm[1]; changed = true; }
+  return changed;
+}
+
+function pName() { return userMem.nickname || userMem.name; }
+
+// ═══════════════════════════════════════════════════
+//  MATCH LOGIC
+// ═══════════════════════════════════════════════════
+function norm(s) { return s.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim(); }
+
+function scoreKB(entry, query) {
+  let score = 0;
+  const q = norm(query);
+  for (const kw of entry.kw) {
+    if (q.includes(norm(kw))) score += kw.split(' ').length * 3;
+  }
+  if (q.includes(norm(entry.q))) score += 5;
+  return score;
+}
+
+function findKB(query) {
+  for (const item of userMem.learned) {
+    if (norm(query).includes(norm(item.q)) || norm(item.q).includes(norm(query).slice(0,20))) {
+      return { a: item.a };
+    }
+  }
+  let best = null, bs = 0;
+  for (const e of knowledgeBase) {
+    const s = scoreKB(e, query);
+    if (s > bs) { bs = s; best = e; }
+  }
+  return bs >= 3 ? best : null;
+}
+
+function findPersonality(query) {
+  const q = norm(query);
+  for (const p of personalityQA) {
+    for (const k of p.keys) {
+      if (q.includes(norm(k))) return p.a;
+    }
+  }
+  return null;
+}
+
+// ═══════════════════════════════════════════════════
+//  RESPONSE GENERATOR
+// ═══════════════════════════════════════════════════
+function generateResponse(userInput) {
+  const lc = userInput.toLowerCase().trim();
+
+  // Name detection
+  const nameChanged = detectName(userInput);
+  if (nameChanged) {
+    const n = pName();
+    return userMem.nickname
+      ? `Of course! I'll call you **${n}** from now on 💕 It's such a lovely name! So, what would you like to learn today, ${n}? 🌸`
+      : `How wonderful to meet you, **${n}**! 🌸 I'll remember your name! What geography topic shall we explore together? 💕`;
+  }
+
+  // Personality / romantic
+  const personalityReply = findPersonality(userInput);
+  if (personalityReply) {
+    const n = pName();
+    return personalityReply + (n ? `\n\n*(P.S. I see you, ${n}! 💕)*` : '');
+  }
+
+  // Greetings (short inputs)
+  const greetWords = ["hi","hello","hey","hii","heyyy","hiya","sup","yo"];
+  if (greetWords.some(g => lc === g || lc === g + '!') || lc.length < 4) {
+    const n = pName();
+    const replies = [
+      `Hello${n ? ' ' + n : ''} there! 🌸 I'm so happy you're here! What geography topic would you like to revise today? 💕`,
+      `Hi${n ? ' ' + n : ''}! 💖 What a lovely time to learn! Ask me anything about geography or just chat with me! 🌸`,
+      `Hey${n ? ' ' + n : ''}! ✨ Tell me what you want to learn today — I'm all yours! 💕`,
+    ];
+    return replies[Math.floor(Math.random() * replies.length)];
+  }
+
+  // Knowledge base
+  const match = findKB(userInput);
+  if (match) {
+    const n = pName();
+    const prefix = n ? `*Great question, ${n}!* 💕\n\n` : '';
+    return prefix + match.a;
+  }
+
+  // Fallback — save and respond
+  const fallback = fallbackAnswer(userInput);
+  userMem.learned.push({ q: userInput.toLowerCase().trim(), a: fallback });
+  return `*(I'm learning this from our chat!* 📚)\n\n${fallback}`;
+}
+
+function fallbackAnswer(q) {
+  const l = q.toLowerCase();
+  if (l.includes("river") || l.includes("ganga")) return `Rivers are vital geographic features! **Ganga, Brahmaputra, Yamuna, Godavari** are among India's major rivers. They form the Northern Plains and support agriculture. 💧`;
+  if (l.includes("climate")) return `India has a **Tropical Monsoon Climate** — hot summers, heavy monsoon rains (June–September), and cool winters. The **Tropic of Cancer** divides it into two zones. 🌦️`;
+  if (l.includes("himalaya") || l.includes("mountain")) return `The Himalayas consist of **Himadri** (highest), **Himachal** (middle), and **Shiwalik** (outer) ranges. They protect India from cold winds and are the source of major rivers. ⛰️`;
+  if (l.includes("soil")) return `Major soils of India:\n• **Alluvial** — most fertile, Northern Plains\n• **Black (Regur)** — best for cotton, Deccan\n• **Red** — Peninsular India\n• **Laterite** — high rainfall areas 🌱`;
+  return `That's a thoughtful question! 🌸 I'm still growing in this area. Here's a tip: try rephrasing your question or check your textbook for detailed information. I've noted your question and will improve! 💕📚`;
+}
+
+// ═══════════════════════════════════════════════════
+//  UI HELPERS
+// ═══════════════════════════════════════════════════
+const chat = document.getElementById('chatContainer');
+const input = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+
+function getTime() {
+  return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+}
+
+function renderMd(text) {
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  text = text.replace(/^• (.+)$/gm, '<li>$1</li>');
+  text = text.replace(/(<li>[\s\S]*?<\/li>)+/g, m => `<ul>${m}</ul>`);
+  text = text.replace(/\n/g, '<br>');
+  return text;
+}
+
+function addMsg(text, isUser) {
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + (isUser ? 'user' : 'ai');
+
+  // Meta row (avatar + name)
+  const meta = document.createElement('div');
+  meta.className = 'msg-meta';
+
+  const avatarEl = document.createElement('div');
+  avatarEl.className = 'avatar-sm';
+  if (isUser) {
+    avatarEl.textContent = '👤';
+  } else {
+    avatarEl.innerHTML = `<img src="https://i.ibb.co/tTgw6Brj/1e327dd0-4197-4fca-bf4a-48d9665bdc60.jpg" alt="Bipchi" onerror="this.parentNode.textContent='🌸'">`;
+  }
+
+  const nameSpan = document.createElement('div');
+  nameSpan.className = 'sender-name';
+  nameSpan.textContent = isUser ? 'You' : 'Bipchi AI';
+
+  meta.appendChild(avatarEl);
+  meta.appendChild(nameSpan);
+
+  // Bubble
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (isUser ? 'user' : 'ai');
+
+  row.appendChild(meta);
+  row.appendChild(bubble);
+  chat.appendChild(row);
+  scrollBottom();
+
+  if (isUser) {
+    bubble.innerHTML = escHtml(text) + `<span class="time">${getTime()}</span>`;
+  } else {
+    typeMsg(bubble, text);
+  }
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function typeMsg(bubble, raw, speed = 20) {
+  const words = raw.split(' ');
+  let i = 0, cur = '';
+  function next() {
+    if (i < words.length) {
+      cur += (i === 0 ? '' : ' ') + words[i++];
+      bubble.innerHTML = renderMd(cur) + `<span style="opacity:0.25">▍</span>`;
+      scrollBottom();
+      setTimeout(next, speed + Math.random() * 14);
+    } else {
+      bubble.innerHTML = renderMd(raw) + `<span class="time">${getTime()}</span>`;
+      scrollBottom();
+      sendBtn.disabled = false;
+    }
+  }
+  next();
+}
+
+function showTyping() {
+  const row = document.createElement('div');
+  row.className = 'typing-row'; row.id = 'typingRow';
+  const meta = document.createElement('div');
+  meta.className = 'msg-meta';
+  const av = document.createElement('div');
+  av.className = 'avatar-sm';
+  av.innerHTML = `<img src="https://i.ibb.co/tTgw6Brj/1e327dd0-4197-4fca-bf4a-48d9665bdc60.jpg" alt="Bipchi" onerror="this.parentNode.textContent='🌸'">`;
+  const nm = document.createElement('div');
+  nm.className = 'sender-name'; nm.textContent = 'Bipchi AI';
+  meta.appendChild(av); meta.appendChild(nm);
+  const dots = document.createElement('div');
+  dots.className = 'typing-dots';
+  dots.innerHTML = '<span></span><span></span><span></span>';
+  row.appendChild(meta); row.appendChild(dots);
+  chat.appendChild(row);
+  scrollBottom();
+}
+
+function hideTyping() {
+  const el = document.getElementById('typingRow');
+  if (el) el.remove();
+}
+
+function scrollBottom() { chat.scrollTop = chat.scrollHeight; }
+
+function sendMessage() {
+  const text = input.value.trim();
+  if (!text || sendBtn.disabled) return;
+  input.value = '';
+  sendBtn.disabled = true;
+  addMsg(text, true);
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    const reply = generateResponse(text);
+    addMsg(reply, false);
+  }, 800 + Math.random() * 600);
+}
+
+input.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+
+// ═══════════════════════════════════════════════════
+//  FLOATING HEARTS
+// ═══════════════════════════════════════════════════
+const hb = document.getElementById('heartBg');
+const emojis = ['💗','💖','🌸','💕','✨','🌷','💝','🌺','🩷','💫'];
+for (let i = 0; i < 22; i++) {
+  const s = document.createElement('span');
+  s.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+  s.style.left = Math.random() * 100 + 'vw';
+  s.style.animationDuration = (14 + Math.random() * 22) + 's';
+  s.style.animationDelay = (Math.random() * 18) + 's';
+  s.style.fontSize = (0.65 + Math.random() * 0.8) + 'rem';
+  hb.appendChild(s);
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    setTimeout(() => {
+      addMsg(`Hello there! 🌸 I'm **Bipchi AI**, your sweet and dedicated geography study companion!\n\n💖 I'm designed to help you with quick revision of **B.A 4th Semester Geography Major**.\n\n✨ I can help you with:\n• India's Geography (Location, Physical Setting, Population)\n• Cartography & Map Making\n• Population & Settlement Geography\n• Geomorphology\n• General Geography Basics\n\nI also love a good chat — try asking me *"who are you"*, *"do you have a boyfriend"*, or *"how old are you"*! 😄💕\n\n*Please remember: I'm still learning and may make mistakes!* 🌸\n\nWhat would you like to explore today?`, false);
+    }, 300);
+  }, 2800);
+});
+</script>
+</body>
+</html>
