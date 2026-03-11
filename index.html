@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Helper AI – B.A 4th Sem Geography</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink-100: #fff0f5;
+    --pink-200: #ffd6e7;
+    --pink-300: #ffb3cc;
+    --pink-400: #ff80aa;
+    --pink-500: #ff4d88;
+    --pink-600: #e6005c;
+    --rose: #ff6b9d;
+    --gold: #f0c060;
+    --cream: #fff8f0;
+    --dark: #2d1b2e;
+    --purple-soft: #8b4e6e;
+    --shadow: rgba(255,105,180,0.18);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #fff0f5 0%, #ffe4f0 30%, #fff0fa 60%, #fce8ff 100%);
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background: 
+      radial-gradient(circle at 10% 20%, rgba(255,180,210,0.25) 0%, transparent 50%),
+      radial-gradient(circle at 90% 80%, rgba(220,130,255,0.18) 0%, transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(255,200,230,0.1) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  /* Floating hearts */
+  .heart-bg { position:fixed; pointer-events:none; z-index:0; }
+  .heart-bg span {
+    position: absolute; font-size: 1.2rem; opacity: 0.08;
+    animation: floatHeart linear infinite;
+  }
+
+  @keyframes floatHeart {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.08; }
+    90% { opacity: 0.08; }
+    100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+  }
+
+  /* NOTICE BOARD */
+  .notice-board {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: linear-gradient(90deg, #ff4d88 0%, #d63384 50%, #ff4d88 100%);
+    color: white;
+    padding: 8px 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-align: center;
+    box-shadow: 0 2px 12px rgba(255,77,136,0.4);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-family: 'Nunito', sans-serif;
+  }
+  .notice-badge {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 0.7rem;
+    white-space: nowrap;
+  }
+  .notice-text { flex: 1; }
+
+  /* MAIN LAYOUT */
+  .app {
+    position: relative; z-index: 1;
+    display: flex; flex-direction: column;
+    height: 100vh; padding-top: 38px;
+  }
+
+  /* HEADER */
+  .header {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(20px);
+    border-bottom: 1.5px solid rgba(255,150,180,0.2);
+    padding: 12px 24px;
+    display: flex; align-items: center; gap: 14px;
+    box-shadow: 0 4px 24px rgba(255,100,160,0.1);
+  }
+  .ai-avatar-header {
+    width: 48px; height: 48px; border-radius: 50%;
+    border: 2.5px solid var(--pink-400);
+    box-shadow: 0 0 0 4px rgba(255,100,160,0.15), 0 2px 12px rgba(255,77,136,0.3);
+    object-fit: cover;
+    transition: transform 0.3s;
+  }
+  .ai-avatar-header:hover { transform: scale(1.08); }
+  .header-info h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    color: var(--dark);
+    font-weight: 700;
+  }
+  .header-info p {
+    font-size: 0.72rem;
+    color: var(--purple-soft);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+  .header-status {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 0.7rem; color: #22c55e; font-weight: 700;
+    margin-top: 2px;
+  }
+  .status-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #22c55e;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(1.3)} }
+
+  .header-right { margin-left: auto; text-align: right; }
+  .header-tag {
+    background: linear-gradient(135deg, var(--pink-400), var(--purple-soft));
+    color: white; font-size: 0.65rem; font-weight: 700;
+    padding: 3px 10px; border-radius: 20px;
+    letter-spacing: 0.04em;
+  }
+
+  /* BOARD BANNER */
+  .study-board {
+    background: linear-gradient(135deg, rgba(255,255,255,0.85) 0%, rgba(255,225,240,0.9) 100%);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,150,180,0.3);
+    margin: 10px 16px 0;
+    border-radius: 16px;
+    padding: 10px 18px;
+    display: flex; align-items: center; gap: 12px;
+    box-shadow: 0 4px 20px rgba(255,100,150,0.1);
+  }
+  .board-icon { font-size: 1.6rem; }
+  .board-text h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    color: var(--dark);
+    font-weight: 700;
+  }
+  .board-text p {
+    font-size: 0.7rem;
+    color: var(--purple-soft);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+  .board-warning {
+    margin-left: auto;
+    background: linear-gradient(135deg, #fff3cd, #ffe0a0);
+    border: 1px solid #f0c060;
+    border-radius: 10px;
+    padding: 4px 10px;
+    font-size: 0.62rem;
+    color: #7a5a00;
+    font-weight: 700;
+    text-align: center;
+    max-width: 160px;
+    line-height: 1.3;
+  }
+
+  /* CHAT AREA */
+  .chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 14px 16px 10px;
+    scroll-behavior: smooth;
+  }
+  .chat-container::-webkit-scrollbar { width: 5px; }
+  .chat-container::-webkit-scrollbar-track { background: transparent; }
+  .chat-container::-webkit-scrollbar-thumb {
+    background: rgba(255,130,170,0.3); border-radius: 10px;
+  }
+
+  /* MESSAGES */
+  .msg-row {
+    display: flex; align-items: flex-end; gap: 8px;
+    margin-bottom: 14px; animation: fadeUp 0.4s ease;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .msg-row.user { flex-direction: row-reverse; }
+
+  .avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    flex-shrink: 0; overflow: hidden;
+    border: 2px solid var(--pink-300);
+    box-shadow: 0 2px 10px rgba(255,80,140,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem;
+    background: white;
+  }
+  .avatar img { width:100%; height:100%; object-fit:cover; }
+
+  .bubble {
+    max-width: 72%;
+    padding: 11px 16px;
+    border-radius: 18px;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    position: relative;
+    word-break: break-word;
+  }
+  .bubble.ai {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(10px);
+    border: 1.2px solid rgba(255,150,185,0.25);
+    border-bottom-left-radius: 4px;
+    color: var(--dark);
+    box-shadow: 0 4px 20px rgba(255,100,155,0.1);
+  }
+  .bubble.user {
+    background: linear-gradient(135deg, #ff80aa, #d63384);
+    color: white;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 16px rgba(214,51,132,0.35);
+  }
+  .bubble.ai ul { padding-left: 16px; margin-top: 4px; }
+  .bubble.ai ul li { margin-bottom: 4px; }
+  .bubble.ai strong { color: var(--pink-600); }
+  .bubble .time {
+    font-size: 0.62rem;
+    opacity: 0.55;
+    margin-top: 4px;
+    display: block;
+    text-align: right;
+  }
+  .bubble.user .time { color: rgba(255,255,255,0.75); }
+
+  /* TYPING INDICATOR */
+  .typing-indicator {
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .typing-dots {
+    background: rgba(255,255,255,0.9);
+    border: 1.2px solid rgba(255,150,185,0.25);
+    border-radius: 18px;
+    border-bottom-left-radius: 4px;
+    padding: 12px 18px;
+    display: flex; gap: 5px; align-items: center;
+    box-shadow: 0 4px 16px rgba(255,100,155,0.08);
+  }
+  .typing-dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--pink-400);
+    animation: bounce 1.2s infinite;
+  }
+  .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+  /* LOADING OVERLAY */
+  .loading-overlay {
+    position: fixed; inset: 0;
+    background: linear-gradient(135deg, #fff0f5, #ffe4f0, #fce8ff);
+    z-index: 9999;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 24px;
+    transition: opacity 0.5s, visibility 0.5s;
+  }
+  .loading-overlay.hidden { opacity: 0; visibility: hidden; }
+  .loading-logo img {
+    width: 90px; height: 90px; border-radius: 50%;
+    border: 3px solid var(--pink-400);
+    box-shadow: 0 0 30px rgba(255,100,160,0.4);
+    animation: loadPulse 2s ease-in-out infinite;
+  }
+  @keyframes loadPulse {
+    0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(255,100,160,0.4)}
+    50%{transform:scale(1.06);box-shadow:0 0 50px rgba(255,100,160,0.6)}
+  }
+  .loading-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--dark);
+    font-weight: 700;
+  }
+  .loading-sub {
+    font-size: 0.8rem;
+    color: var(--purple-soft);
+    font-weight: 600;
+    text-align: center;
+    max-width: 260px;
+    line-height: 1.5;
+  }
+  .loading-bar-wrap {
+    width: 220px;
+    background: rgba(255,150,180,0.2);
+    border-radius: 20px;
+    height: 6px;
+    overflow: hidden;
+  }
+  .loading-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--pink-400), var(--purple-soft));
+    border-radius: 20px;
+    animation: loadBar 2.5s ease forwards;
+  }
+  @keyframes loadBar { from{width:0%} to{width:100%} }
+  .loading-hearts { font-size: 1.2rem; letter-spacing: 5px; animation: spin 3s linear infinite; }
+  @keyframes spin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+  /* INPUT AREA */
+  .input-area {
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(20px);
+    border-top: 1.5px solid rgba(255,150,180,0.2);
+  }
+  .input-wrapper {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(255,255,255,0.95);
+    border: 1.5px solid rgba(255,130,170,0.35);
+    border-radius: 50px;
+    padding: 8px 8px 8px 18px;
+    box-shadow: 0 4px 20px rgba(255,100,155,0.12);
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .input-wrapper:focus-within {
+    border-color: var(--pink-400);
+    box-shadow: 0 4px 24px rgba(255,77,136,0.22);
+  }
+  .input-wrapper input {
+    flex: 1; border: none; outline: none;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.875rem;
+    background: transparent;
+    color: var(--dark);
+  }
+  .input-wrapper input::placeholder { color: rgba(180,100,130,0.5); }
+  .send-btn {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink-400), var(--purple-soft));
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 12px rgba(255,77,136,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    color: white;
+  }
+  .send-btn:hover { transform: scale(1.1); box-shadow: 0 5px 16px rgba(255,77,136,0.5); }
+  .send-btn:active { transform: scale(0.95); }
+  .send-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  .input-hint {
+    font-size: 0.62rem;
+    color: rgba(180,100,130,0.6);
+    text-align: center;
+    margin-top: 5px;
+    font-weight: 600;
+  }
+
+  /* Scrollbar for the whole page */
+  * { scrollbar-width: thin; scrollbar-color: rgba(255,130,170,0.3) transparent; }
+</style>
+</head>
+<body>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-logo">
+    <img src="https://i.ibb.co/tTgw6Brj/1e327dd0-4197-4fca-bf4a-48d9665bdc60.jpg" alt="Helper AI" onerror="this.style.display='none'">
+  </div>
+  <div class="loading-text">Helper AI ✨</div>
+  <div class="loading-sub">This AI is in her learning process so it can make mistakes, please! 💕</div>
+  <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+  <div class="loading-hearts">💗 💖 💗</div>
+</div>
+
+<!-- FLOATING HEARTS BACKGROUND -->
+<div class="heart-bg" id="heartBg"></div>
+
+<!-- NOTICE BAR -->
+<div class="notice-board">
+  <div class="notice-badge">📚 INFO</div>
+  <div class="notice-text">Designed to help in quick revision of B.A 4th Semester Geography Major</div>
+  <div class="notice-badge">Helper AI 💕</div>
+</div>
+
+<!-- APP -->
+<div class="app">
+  <!-- HEADER -->
+  <div class="header">
+    <img class="ai-avatar-header" src="https://i.ibb.co/tTgw6Brj/1e327dd0-4197-4fca-bf4a-48d9665bdc60.jpg" alt="Helper AI" onerror="this.style.background='linear-gradient(135deg,#ff80aa,#d63384)';this.style.content='🌸'">
+    <div class="header-info">
+      <h1>Helper AI 🌸</h1>
+      <div class="header-status"><div class="status-dot"></div> Online & Learning</div>
+      <p>Your sweet geography study companion</p>
+    </div>
+    <div class="header-right">
+      <div class="header-tag">B.A 4th Sem · Geography Major</div>
+    </div>
+  </div>
+
+  <!-- STUDY BOARD -->
+  <div class="study-board">
+    <div class="board-icon">📖</div>
+    <div class="board-text">
+      <h2>Quick Revision Board</h2>
+      <p>B.A 4th Semester · Geography Major · Units I–V</p>
+    </div>
+    <div class="board-warning">⚠️ This AI is in her learning process — she can make mistakes, please! 💕</div>
+  </div>
+
+  <!-- CHAT -->
+  <div class="chat-container" id="chatContainer"></div>
+
+  <!-- INPUT -->
+  <div class="input-area">
+    <div class="input-wrapper">
+      <input type="text" id="userInput" placeholder="Ask me anything about geography... 💕" autocomplete="off">
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send">➤</button>
+    </div>
+    <div class="input-hint">Press Enter or click ➤ to send · I learn from every conversation 🌸</div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  KNOWLEDGE BASE – Geography Questions & Answers
+// ============================================================
+const knowledgeBase = [
+  // INDIA GEOGRAPHY – Unit I
+  {q:"latitudinal extent of india",a:"India stretches from **8°4' N to 37°6' N** latitude.",keywords:["latitudinal","latitude","india","extent"]},
+  {q:"longitudinal extent of india",a:"India extends from **68°7' E to 97°25' E** longitude.",keywords:["longitudinal","longitude","india","extent"]},
+  {q:"total geographical area of india",a:"India's total geographical area is about **3.28 million sq km**.",keywords:["area","geographical","india","total","size"]},
+  {q:"standard meridian of india",a:"The Standard Meridian of India is **82°30' E longitude**.",keywords:["standard","meridian","india"]},
+  {q:"why is india's location important",a:"India's location is important because:\n• Central location in Asia\n• Close to major trade routes\n• Cultural and economic contacts with many nations",keywords:["india","location","important","why"]},
+  {q:"how many states are there in india",a:"India has **28 states**.",keywords:["states","india","how many"]},
+  {q:"how many union territories are in india",a:"India has **8 Union Territories**.",keywords:["union territories","india","how many"]},
+  {q:"name two neighbouring countries of india",a:"Two neighbouring countries of India are:\n• **China**\n• **Bangladesh**",keywords:["neighbouring","countries","india"]},
+  {q:"india strategic importance",a:"India's strategic importance:\n• Control of Indian Ocean routes\n• Trade connectivity with Asia, Africa & Europe",keywords:["strategic","importance","india"]},
+  {q:"what divides india into two climatic parts",a:"The **Tropic of Cancer** divides India into two climatic parts.",keywords:["divides","india","climatic","tropic","cancer"]},
+  // Unit II – Physical Setting
+  {q:"major physiographic divisions of india",a:"The major physiographic divisions of India are:\n• Himalayan Mountains\n• Northern Plains\n• Peninsular Plateau\n• Coastal Plains\n• Islands",keywords:["physiographic","divisions","india"]},
+  {q:"northern plain formed by",a:"The Northern Plain is formed by **alluvial deposits of rivers**.",keywords:["northern plain","formed","alluvial"]},
+  {q:"three himalayan ranges",a:"The three Himalayan ranges are:\n• **Himadri** (Great Himalayas)\n• **Himachal** (Middle Himalayas)\n• **Shiwalik** (Outer Himalayas)",keywords:["himalayan","ranges","three"]},
+  {q:"peninsular plateau",a:"The Peninsular Plateau is:\n• The **oldest landmass** of India\n• **Rich in minerals**",keywords:["peninsular","plateau"]},
+  {q:"two major rivers of india",a:"Two major rivers of India:\n• **Ganga**\n• **Brahmaputra**",keywords:["rivers","india","major"]},
+  {q:"two main coastal plains",a:"The two main coastal plains are:\n• **Eastern Coastal Plain**\n• **Western Coastal Plain**",keywords:["coastal plains","two"]},
+  {q:"island groups of india",a:"The island groups of India:\n• **Andaman and Nicobar Islands**\n• **Lakshadweep**",keywords:["island","groups","india"]},
+  {q:"type of climate india has",a:"India has a **Tropical Monsoon Climate**.",keywords:["climate","india","type"]},
+  {q:"two important soils in india",a:"Two important soils in India:\n• **Alluvial soil**\n• **Black soil**",keywords:["soils","india","important"]},
+  {q:"which soil is best for cotton",a:"**Black soil** is best for cotton cultivation.",keywords:["soil","cotton","best"]},
+  // Unit III – Population
+  {q:"population density",a:"**Population density** is the number of people per square kilometre.",keywords:["population density","what is"]},
+  {q:"highest population state india",a:"**Uttar Pradesh** has the highest population in India.",keywords:["highest","population","state","india"]},
+  {q:"population growth",a:"**Population growth** is the increase in population over time.",keywords:["population growth"]},
+  {q:"sex ratio",a:"**Sex ratio** is the number of females per 1000 males.",keywords:["sex ratio"]},
+  {q:"literacy rate",a:"**Literacy rate** is the percentage of people who can read and write.",keywords:["literacy rate"]},
+  {q:"main religions in india",a:"The main religions in India are:\n• Hinduism\n• Islam\n• Christianity\n• Sikhism",keywords:["religions","india","main"]},
+  {q:"age composition of population",a:"**Age composition** is the distribution of population by age groups.",keywords:["age composition","population"]},
+  {q:"spatial distribution of population",a:"**Spatial distribution** refers to how population is spread across regions.",keywords:["spatial distribution","population"]},
+  {q:"two densely populated regions in india",a:"Two densely populated regions in India:\n• **Indo-Gangetic Plain**\n• **Coastal regions**",keywords:["densely populated","regions","india"]},
+  {q:"two sparsely populated regions",a:"Two sparsely populated regions:\n• **Himalayan region**\n• **Thar Desert**",keywords:["sparsely populated","regions"]},
+  // Unit IV – Socio-Economic
+  {q:"socio-economic development",a:"**Socio-economic development** is the improvement in economic and social conditions of people.",keywords:["socio-economic","development"]},
+  {q:"what is literacy",a:"**Literacy** is the ability to read and write.",keywords:["literacy","what is"]},
+  {q:"health status",a:"**Health status** refers to the condition of public health and medical care in a region.",keywords:["health status"]},
+  {q:"transport systems",a:"Transport systems include:\n• Roads\n• Railways\n• Airways\n• Waterways",keywords:["transport systems"]},
+  {q:"why is transport important",a:"Transport is important for the **movement of goods and people** across regions.",keywords:["transport","important","why"]},
+  {q:"what is communication",a:"**Communication** is the exchange of information between people or places.",keywords:["communication","what is"]},
+  {q:"what is trade",a:"**Trade** is the buying and selling of goods between individuals, regions, or countries.",keywords:["trade","what is"]},
+  {q:"what are exports",a:"**Exports** are goods sold to other countries.",keywords:["exports","what are"]},
+  {q:"what are imports",a:"**Imports** are goods purchased from other countries.",keywords:["imports","what are"]},
+  {q:"two indicators of development",a:"Two indicators of development:\n• **Literacy rate**\n• **Health facilities**",keywords:["indicators","development"]},
+  // Unit V – Agriculture
+  {q:"major food crops of india",a:"The major food crops of India:\n• **Rice**\n• **Wheat**\n• **Millet**",keywords:["food crops","india","major"]},
+  {q:"staple food of india",a:"**Rice** is called the staple food of India.",keywords:["staple food","india"]},
+  {q:"crop mainly grown in punjab and haryana",a:"**Wheat** is mainly grown in Punjab and Haryana.",keywords:["crop","punjab","haryana"]},
+  {q:"what are cash crops",a:"**Cash crops** are crops grown for sale rather than personal consumption.",keywords:["cash crops","what are"]},
+  {q:"two cash crops",a:"Two cash crops:\n• **Cotton**\n• **Sugarcane**",keywords:["cash crops","two"]},
+  {q:"industrial development",a:"**Industrial development** is the growth of industries in a country.",keywords:["industrial development"]},
+  {q:"two iron and steel centres",a:"Two iron and steel centres in India:\n• **Jamshedpur**\n• **Bhilai**",keywords:["iron","steel","centres"]},
+  {q:"energy resources",a:"**Energy resources** are sources of power generation.",keywords:["energy resources"]},
+  {q:"two renewable energy sources",a:"Two renewable energy sources:\n• **Solar energy**\n• **Wind energy**",keywords:["renewable","energy","sources"]},
+  {q:"two non-renewable energy resources",a:"Two non-renewable energy resources:\n• **Coal**\n• **Petroleum**",keywords:["non-renewable","energy"]},
+  // CARTOGRAPHY – Unit I
+  {q:"what is cartography",a:"**Cartography** is the science and art of making maps.\nIt involves collection, analysis, and representation of geographic data.",keywords:["cartography","what is"]},
+  {q:"what is a map",a:"A **map** is a scaled representation of the earth's surface on a flat surface.",keywords:["map","what is"]},
+  {q:"main elements of cartography",a:"Main elements of cartography:\n• Data collection\n• Map design\n• Map projection\n• Symbolization\n• Map interpretation",keywords:["elements","cartography"]},
+  {q:"traditional cartography",a:"**Traditional Cartography** is map making using manual drawing techniques, based on survey data and field observation.",keywords:["traditional","cartography"]},
+  {q:"modern cartography",a:"**Modern Cartography** uses computers and digital technology, including GIS, satellite imagery, and remote sensing.",keywords:["modern","cartography"]},
+  {q:"importance of cartography",a:"Cartography is important because it:\n• Helps in geographical study\n• Useful for planning and development\n• Helps in navigation and defense",keywords:["importance","cartography"]},
+  {q:"father of modern cartography",a:"**Gerardus Mercator** is known as the father of modern cartography.",keywords:["father","modern","cartography"]},
+  {q:"main functions of maps",a:"Main functions of maps:\n• Representation of spatial data\n• Communication of information\n• Analysis of geographic patterns",keywords:["functions","maps"]},
+  {q:"what is map design",a:"**Map design** is the arrangement of symbols, colors, labels and layout to make maps clear and readable.",keywords:["map design"]},
+  {q:"what is map interpretation",a:"**Map interpretation** is understanding and analyzing information shown in maps.",keywords:["map interpretation"]},
+  {q:"what are thematic maps",a:"**Thematic maps** show specific themes like rainfall, population, or temperature.",keywords:["thematic maps"]},
+  {q:"general reference map",a:"**General reference maps** show general information like rivers, roads, and cities.",keywords:["general reference","map"]},
+  {q:"advantages of modern cartography",a:"Advantages of modern cartography:\n• High accuracy\n• Easy data storage\n• Quick map production",keywords:["advantages","modern","cartography"]},
+  {q:"what is digital cartography",a:"**Digital cartography** involves creating maps using computer software and digital data.",keywords:["digital","cartography"]},
+  // Shape & Coordinate System – Unit II
+  {q:"shape of the earth",a:"The earth is **geoid** — a slightly flattened sphere.",keywords:["shape","earth"]},
+  {q:"what is latitude",a:"**Latitude** is the angular distance north or south of the equator.",keywords:["latitude","what is"]},
+  {q:"what is longitude",a:"**Longitude** is the angular distance east or west of the Prime Meridian.",keywords:["longitude","what is"]},
+  {q:"what is the equator",a:"The **Equator** is at 0° latitude and divides the earth into Northern and Southern Hemispheres.",keywords:["equator","what is"]},
+  {q:"what are parallels",a:"**Parallels** are lines running parallel to the equator.",keywords:["parallels","what are"]},
+  {q:"what are meridians",a:"**Meridians** are lines running from the north pole to the south pole.",keywords:["meridians","what are"]},
+  {q:"prime meridian",a:"The **Prime Meridian** is at 0° longitude, passing through Greenwich, UK.",keywords:["prime meridian"]},
+  {q:"important latitudes",a:"Important latitudes:\n• **Tropic of Cancer** – 23½° N\n• **Tropic of Capricorn** – 23½° S\n• **Arctic Circle** – 66½° N\n• **Antarctic Circle** – 66½° S",keywords:["important latitudes"]},
+  {q:"coordinate system",a:"A **coordinate system** is used to locate places on earth using latitude and longitude.",keywords:["coordinate system"]},
+  {q:"length of a degree of latitude",a:"One degree of latitude is approximately **111 km**.",keywords:["degree","latitude","length"]},
+  {q:"international date line",a:"The **International Date Line** is near 180° longitude, where the date changes.",keywords:["international date line"]},
+  {q:"difference between latitude and longitude",a:"**Latitude:** runs east-west, measures north/south position.\n**Longitude:** runs north-south, measures east/west position.",keywords:["difference","latitude","longitude"]},
+  {q:"what are hemispheres",a:"**Hemispheres** are halves of the earth divided by the equator or prime meridian.",keywords:["hemispheres"]},
+  {q:"grid system",a:"A **grid system** is the network formed by intersections of latitudes and longitudes.",keywords:["grid system"]},
+  {q:"geographic location",a:"**Geographic location** is the exact position of a place using coordinates.",keywords:["geographic location"]},
+  // Maps – Unit III
+  {q:"characteristics of a good map",a:"Characteristics of a good map:\n• **Accuracy**\n• **Clarity**\n• **Proper scale**\n• **Proper symbols**",keywords:["characteristics","good map"]},
+  {q:"map scale",a:"**Map scale** is the ratio between distance on the map and actual distance on the ground.",keywords:["map scale"]},
+  {q:"types of map scale",a:"Types of map scale:\n• Statement scale\n• Representative Fraction (RF)\n• Linear scale",keywords:["types","map scale"]},
+  {q:"statement scale",a:"A **Statement Scale** expresses scale in words, e.g., *1 cm = 1 km*.",keywords:["statement scale"]},
+  {q:"representative fraction rf",a:"A **Representative Fraction (RF)** expresses scale as a ratio, e.g., 1:50,000.",keywords:["representative fraction","rf"]},
+  {q:"linear scale",a:"A **Linear Scale** is a bar line drawn on the map that shows distance directly.",keywords:["linear scale"]},
+  {q:"large scale maps",a:"**Large scale maps** show a small area with more detail.",keywords:["large scale maps"]},
+  {q:"small scale maps",a:"**Small scale maps** show a large area with less detail.",keywords:["small scale maps"]},
+  {q:"map content",a:"**Map content** refers to all the information displayed on a map.",keywords:["map content"]},
+  {q:"map symbols",a:"**Map symbols** are signs used to represent features like roads, rivers, and cities.",keywords:["map symbols"]},
+  {q:"what is legend",a:"A **legend** (or map key) explains what the symbols on a map mean.",keywords:["legend","map"]},
+  {q:"map title",a:"A **map title** is the heading that explains what the map shows.",keywords:["map title"]},
+  {q:"north arrow",a:"A **north arrow** is a symbol showing the direction of north on a map.",keywords:["north arrow"]},
+  {q:"point data representation",a:"**Point data** represents specific locations, e.g., cities, wells, schools.",keywords:["point data"]},
+  {q:"line data representation",a:"**Line data** represents linear features, e.g., rivers, roads, railways.",keywords:["line data"]},
+  {q:"area data representation",a:"**Area data** represents regions, e.g., forest area, agricultural land.",keywords:["area data"]},
+  {q:"dot map",a:"A **dot map** shows distribution using dots, where each dot represents a fixed quantity.",keywords:["dot map"]},
+  {q:"proportional symbol map",a:"A **proportional symbol map** uses symbols of different sizes to represent quantity.",keywords:["proportional symbol map"]},
+  // Map Projection – Unit IV
+  {q:"what is map projection",a:"**Map projection** is the method of transferring the earth's curved surface onto a flat map.",keywords:["map projection"]},
+  {q:"why is projection necessary",a:"Projection is necessary because the **earth is spherical** but maps are flat.",keywords:["projection","necessary","why"]},
+  {q:"types of map projections",a:"Types of map projections:\n• **Cylindrical**\n• **Conical**\n• **Zenithal (Azimuthal)**",keywords:["types","map projections"]},
+  {q:"cylindrical projection",a:"**Cylindrical projection** is created by projecting the earth onto a cylinder surface.\nExample: **Mercator Projection**",keywords:["cylindrical","projection"]},
+  {q:"conical projection",a:"**Conical projection** is created by projecting the earth onto a cone placed over it.",keywords:["conical","projection"]},
+  {q:"zenithal projection",a:"**Zenithal projection** is created by projecting the earth onto a flat plane touching it.",keywords:["zenithal","azimuthal","projection"]},
+  {q:"distortions in maps",a:"**Distortions** in maps are errors in area, shape, distance, or direction.",keywords:["distortions","maps"]},
+  {q:"properties of good projection",a:"A good map projection should have:\n• Correct shape\n• Correct area\n• Correct distance",keywords:["properties","good projection"]},
+  {q:"equal area projection",a:"**Equal area projection** maintains correct area but shape may distort.",keywords:["equal area","projection"]},
+  {q:"conformal projection",a:"**Conformal projection** maintains the correct shape of features.",keywords:["conformal","projection"]},
+  {q:"how is projection chosen",a:"Projection is chosen based on the **map purpose** and the **area extent** to be shown.",keywords:["how","projection chosen"]},
+  // Thematic Mapping – Unit V
+  {q:"what is thematic mapping",a:"**Thematic mapping** involves creating maps that show specific data or a theme.",keywords:["thematic mapping"]},
+  {q:"examples of thematic maps",a:"Examples of thematic maps:\n• Population map\n• Rainfall map\n• Temperature map",keywords:["examples","thematic maps"]},
+  {q:"choropleth map",a:"A **choropleth map** shows data using different shades or colors for different areas.",keywords:["choropleth map"]},
+  {q:"isopleth map",a:"An **isopleth map** uses lines to connect points of equal value.",keywords:["isopleth map"]},
+  {q:"what are isopleths",a:"**Isopleths** are lines connecting equal values, e.g., **Isotherm** (temperature) and **Isohyet** (rainfall).",keywords:["isopleths"]},
+  {q:"data classification",a:"**Data classification** is dividing data into groups or classes for easier analysis.",keywords:["data classification"]},
+  {q:"shading method",a:"The **shading method** uses different colors or patterns to show varying values on a map.",keywords:["shading method"]},
+  {q:"dot method",a:"The **dot method** uses dots to represent quantity or distribution of data.",keywords:["dot method"]},
+  {q:"flow map",a:"A **flow map** shows movement such as migration or trade flows.",keywords:["flow map"]},
+  {q:"cartogram",a:"A **cartogram** is a map where the area size changes according to the data value.",keywords:["cartogram"]},
+  {q:"advantages of thematic maps",a:"Advantages of thematic maps:\n• Easy understanding\n• Clear comparison of data",keywords:["advantages","thematic maps"]},
+  {q:"limitations of thematic maps",a:"Limitation: Thematic maps may **oversimplify data**.",keywords:["limitations","thematic maps"]},
+  {q:"data source in thematic mapping",a:"Data sources in thematic mapping:\n• Census\n• Survey\n• Satellite data",keywords:["data source","thematic mapping"]},
+  {q:"map generalization",a:"**Map generalization** is the simplification of map details for clarity.",keywords:["map generalization"]},
+  {q:"what is symbolization",a:"**Symbolization** is using symbols to represent data on a map.",keywords:["symbolization"]},
+  {q:"map readability",a:"**Map readability** is how easily people understand and interpret the map.",keywords:["map readability"]},
+  {q:"map accuracy",a:"**Map accuracy** is the correct representation of geographic features.",keywords:["map accuracy"]},
+  {q:"map layout",a:"**Map layout** is the arrangement of title, legend, scale, and map body.",keywords:["map layout"]},
+  {q:"map visualization",a:"**Map visualization** is presenting data in visual map form.",keywords:["map visualization"]},
+  {q:"why are thematic maps important",a:"Thematic maps are important because they help **analyze spatial distribution of data**.",keywords:["why","thematic maps","important"]},
+  // POPULATION GEOGRAPHY – Unit I
+  {q:"what is population geography",a:"**Population geography** is the study of spatial variations in population distribution, composition, migration, and growth.",keywords:["population geography"]},
+  {q:"population geography vs demography",a:"**Geography** focuses on *spatial* aspects (where and why), while **demography** focuses on *statistical/quantitative* aspects.",keywords:["population geography","demography","difference"]},
+  {q:"primary source of population data",a:"The most primary source of population data is the **Census**.",keywords:["primary source","population data"]},
+  {q:"census of india",a:"The **Census of India** is the official, systematic enumeration of India's population, conducted every 10 years.",keywords:["census","india"]},
+  {q:"other sources of population data",a:"Other sources of population data:\n• Vital registration systems (birth/death certificates)\n• Sample surveys",keywords:["other sources","population data"]},
+  {q:"define population density",a:"**Population density** is the number of people living per unit of area (usually per sq km).",keywords:["define","population density"]},
+  {q:"physical factors influencing population distribution",a:"Physical factors:\n• Climate\n• Topography (relief)\n• Soil fertility\n• Water availability",keywords:["physical factors","population distribution"]},
+  {q:"socio-economic factors influencing distribution",a:"Socio-economic factors:\n• Industrialization\n• Urbanization\n• Mining\n• Economic opportunities",keywords:["socio-economic factors","distribution"]},
+  {q:"global region with high population density",a:"**South Asia** and **East Asia** have very high population densities globally.",keywords:["global region","high population density"]},
+  {q:"why are deserts sparsely populated",a:"Deserts are sparsely populated due to:\n• Extreme climate\n• Lack of water resources",keywords:["deserts","sparsely populated"]},
+  {q:"three main components of population growth",a:"Three main components:\n• **Fertility**\n• **Mortality**\n• **Migration**",keywords:["components","population growth"]},
+  {q:"fertility rate",a:"**Fertility rate** is the average number of children born to a woman over her lifetime.",keywords:["fertility rate"]},
+  {q:"mortality rate",a:"**Mortality rate** is the number of deaths per 1000 people per year.",keywords:["mortality rate"]},
+  {q:"natural increase",a:"**Natural increase** is the difference between the birth rate and the death rate.",keywords:["natural increase"]},
+  {q:"define migration",a:"**Migration** is the movement of people from one place to another with the intent to settle permanently or semi-permanently.",keywords:["define","migration"]},
+  {q:"push factors in migration",a:"**Push factors** are negative conditions at the origin that drive people away:\n• Poverty\n• War\n• Natural disasters",keywords:["push factors","migration"]},
+  {q:"pull factors in migration",a:"**Pull factors** are positive conditions at the destination that attract people:\n• Job opportunities\n• Safety\n• Better education",keywords:["pull factors","migration"]},
+  {q:"infant mortality rate",a:"**Infant mortality rate** is the number of deaths of infants under one year old per 1,000 live births.",keywords:["infant mortality rate"]},
+  {q:"life expectancy",a:"**Life expectancy** is the average number of years a person is expected to live based on current mortality rates.",keywords:["life expectancy"]},
+  {q:"who proposed malthusian theory",a:"**Thomas Robert Malthus** proposed the Malthusian Theory in 1798.",keywords:["malthusian theory","proposed","who"]},
+  {q:"core concept of malthus theory",a:"Malthus's core concept:\n• Population grows **geometrically** (1, 2, 4, 8...)\n• Food supply grows **arithmetically** (1, 2, 3, 4...)",keywords:["malthus","theory","core concept"]},
+  {q:"malthus preventive checks",a:"**Preventive checks** are voluntary actions to lower the birth rate, like late marriage or celibacy.",keywords:["malthus","preventive checks"]},
+  {q:"malthus positive checks",a:"**Positive checks** are natural events that increase the death rate: famine, disease, and war.",keywords:["malthus","positive checks"]},
+  {q:"demographic transition theory",a:"The **Demographic Transition Theory** explains the transition of a society from high birth/death rates to low birth/death rates as it develops economically.",keywords:["demographic transition theory"]},
+  {q:"stage 1 of demographic transition",a:"**Stage 1:** Both birth rates and death rates are high, leading to slow population growth.",keywords:["stage 1","demographic transition"]},
+  {q:"stage 2 of demographic transition",a:"**Stage 2:** High birth rates but rapidly falling death rates (better healthcare) → population explosion.",keywords:["stage 2","demographic transition"]},
+  {q:"stage 3 of demographic transition",a:"**Stage 3:** Falling birth rates and low death rates → growth starts to slow.",keywords:["stage 3","demographic transition"]},
+  {q:"stage 4 of demographic transition",a:"**Stage 4:** Low birth rates and low death rates → stable or slowly declining population.",keywords:["stage 4","demographic transition"]},
+  {q:"which stage is india in demographic transition",a:"India is generally considered to be in the **later part of Stage 3** of demographic transition.",keywords:["india","stage","demographic transition"]},
+  {q:"population composition",a:"**Population composition** is the structure of a population based on age, sex, residence, or literacy.",keywords:["population composition"]},
+  {q:"age-sex pyramid",a:"An **Age-Sex Pyramid** is a graphical illustration showing the distribution of age groups and sexes in a population.",keywords:["age-sex pyramid"]},
+  {q:"broad base on population pyramid",a:"A **broad base** on a population pyramid indicates a **high birth rate** and large youthful population.",keywords:["broad base","population pyramid"]},
+  {q:"narrow base on pyramid",a:"A **narrow or inverted base** indicates a **declining birth rate** and an aging population.",keywords:["narrow base","pyramid"]},
+  {q:"sex ratio in india",a:"In India, the **sex ratio** is the number of females per 1000 males.",keywords:["sex ratio","india"]},
+  {q:"rural-urban composition",a:"**Rural-urban composition** is the ratio of people living in rural areas compared to urban areas.",keywords:["rural-urban composition"]},
+  {q:"population ageing",a:"**Population ageing** is an increase in the median age of a population, driven by declining fertility and rising life expectancy.",keywords:["population ageing"]},
+  {q:"where is severe population ageing",a:"**Western Europe** and **Japan** are currently facing severe population ageing.",keywords:["severe","population ageing","where"]},
+  // Settlement Geography – Unit II
+  {q:"what is settlement geography",a:"**Settlement geography** is the study of the spatial distribution, physical form, and functional characteristics of human settlements.",keywords:["settlement geography"]},
+  {q:"two primary categories of settlements",a:"The two primary categories of settlements are:\n• **Rural**\n• **Urban**",keywords:["categories","settlements","two"]},
+  {q:"rural settlement",a:"A **rural settlement** is where the majority of residents are engaged in primary activities like agriculture, fishing, and forestry.",keywords:["rural settlement"]},
+  {q:"urban settlement",a:"An **urban settlement** is characterized by high population density and mostly secondary/tertiary occupations.",keywords:["urban settlement"]},
+  {q:"nucleated settlement",a:"A **compact or nucleated settlement** is where houses are built closely together, often around a central point like a temple or water source.",keywords:["nucleated","compact","settlement"]},
+  {q:"dispersed settlement",a:"A **dispersed settlement** is where houses are scattered far apart, often separated by large agricultural fields.",keywords:["dispersed","settlement"]},
+  {q:"linear settlement",a:"A **linear settlement** has houses arranged in a line, typically along a road, railway, or river.",keywords:["linear","settlement"]},
+  {q:"circular settlement",a:"A **circular settlement** has houses clustered around a central feature like a lake or village green.",keywords:["circular","settlement"]},
+  {q:"star-like settlement",a:"A **star-like settlement** expands outward along several roads radiating from a central point.",keywords:["star-like","settlement"]},
+  {q:"cultural factor influencing settlement",a:"Cultural factors influencing settlements:\n• Religion\n• Caste systems\n• Historical defense needs",keywords:["cultural factor","settlement"]},
+  {q:"settlement hierarchy",a:"**Settlement hierarchy** is the ranking of settlements based on size, population, and range of services.",keywords:["settlement hierarchy"]},
+  {q:"arrange hamlet village town city",a:"In hierarchical order:\n**Hamlet → Village → Town → City**",keywords:["hamlet","village","town","city","order"]},
+  {q:"urban fringe",a:"The **urban fringe** is the transitional zone at the outer edge of a city where urban and rural land uses mix.",keywords:["urban fringe"]},
+  {q:"what causes urban fringe",a:"The urban fringe develops due to **rapid outward expansion (sprawl)** of a city into surrounding agricultural land.",keywords:["causes","urban fringe"]},
+  {q:"who proposed central place theory",a:"**Walter Christaller** proposed the Central Place Theory in 1933.",keywords:["central place theory","proposed","who"]},
+  {q:"purpose of christaller theory",a:"Christaller's theory explains the **number, size, and spatial arrangement** of settlements.",keywords:["purpose","christaller","theory"]},
+  {q:"geometric shape christaller",a:"Christaller used **hexagons** because they fit together without leaving unserved gaps or overlapping areas.",keywords:["geometric shape","christaller","hexagon"]},
+  {q:"threshold central place theory",a:"**Threshold** is the minimum number of people required to support a specific business or service.",keywords:["threshold","central place theory"]},
+  {q:"range central place theory",a:"**Range** is the maximum distance a consumer is willing to travel to acquire a good or service.",keywords:["range","central place theory"]},
+  {q:"k=3 principle christaller",a:"**K=3** is the **Marketing Principle** in Christaller's Central Place Theory.",keywords:["k=3","christaller"]},
+  {q:"k=4 principle christaller",a:"**K=4** is the **Transport (Traffic) Principle** in Christaller's theory.",keywords:["k=4","christaller"]},
+  {q:"k=7 principle christaller",a:"**K=7** is the **Administrative Principle** in Christaller's theory.",keywords:["k=7","christaller"]},
+  // Practical Works
+  {q:"line graph use",a:"A **line graph** is best used for showing the trend of population growth over time.",keywords:["line graph","use"]},
+  {q:"decadal growth rate",a:"**Decadal growth rate** is the percentage by which a population has grown over a 10-year census period.",keywords:["decadal growth rate"]},
+  {q:"how to represent population density districts",a:"Population density variations across districts are best shown using a **choropleth map**.",keywords:["represent","population density","districts"]},
+  {q:"pie graph used to show",a:"A **pie graph** is used to show proportional composition, such as rural-urban or religious composition.",keywords:["pie graph","show"]},
+  {q:"flow cartogram depicts",a:"A **flow cartogram (flow map)** depicts the direction and volume of movement, such as migration.",keywords:["flow cartogram","depicts"]},
+  {q:"towns of varied population sizes on map",a:"Towns of varied population sizes are best represented using **proportional spheres or circles**.",keywords:["towns","population","sizes","map"]},
+  {q:"sphere instead of circle for population",a:"A **sphere** uses the cube root of the data, allowing a massive range of sizes to fit neatly on one map.",keywords:["sphere","circle","population","why"]},
+  {q:"total marks practical works",a:"The total marks for practical works is **25 marks**.",keywords:["total marks","practical"]},
+  // Bonus facts
+  {q:"what does demography mean",a:"**Demography** comes from Greek: *demos* (people) + *graphy* (writing/description).",keywords:["demography","mean","literal"]},
+  {q:"malthus population growth curve shape",a:"In Malthusian theory, population growth takes a **J-curve (exponential)** shape.",keywords:["malthus","population growth","curve","shape"]},
+  {q:"malthus food production curve",a:"In Malthusian theory, food production follows a **straight line (linear)** curve.",keywords:["malthus","food production","curve"]},
+  {q:"what defines a megacity",a:"A **megacity** is a metropolitan area with a total population in excess of **10 million people**.",keywords:["megacity","define"]},
+  {q:"brain drain",a:"**Brain drain** is the emigration of highly trained or intelligent people from a country.",keywords:["brain drain"]},
+  {q:"expansive population pyramid",a:"An **expansive pyramid** has a very wide base and sharply tapering top — typical of high fertility/high mortality regions.",keywords:["expansive","population pyramid"]},
+  {q:"constrictive population pyramid",a:"A **constrictive pyramid** is narrower at the base than in the middle, showing falling birth rates.",keywords:["constrictive","population pyramid"]},
+  {q:"primate city",a:"A **primate city** is disproportionately larger (often more than twice) than the second-largest city in a country.",keywords:["primate city"]},
+  {q:"what is hinterland",a:"The **hinterland** is the rural area surrounding a central place that depends on it for services.",keywords:["hinterland"]},
+  {q:"step migration",a:"**Step migration** occurs in stages: farm → village → town → city.",keywords:["step migration"]},
+  // GEOMORPHOLOGY
+  {q:"what is geomorphology",a:"**Geomorphology** is the scientific study of the origin and evolution of topographic features created by physical, chemical, or biological processes.",keywords:["geomorphology","what is"]},
+  {q:"uniformitarianism",a:"**Uniformitarianism** is a foundational concept stating that *the present is the key to the past* — the same natural laws and processes have always operated.",keywords:["uniformitarianism"]},
+  {q:"post-modern geomorphology",a:"**Post-modern geomorphology** focuses on non-linear dynamics, chaos theory, complexity, and human impacts on landscapes.",keywords:["post-modern","geomorphology"]},
+  {q:"recent trends in geomorphology",a:"Recent trends in geomorphology:\n• Quantitative methods\n• GIS\n• Remote sensing\n• Computer modeling",keywords:["recent trends","geomorphology"]},
+  {q:"theoretical geomorphology",a:"**Theoretical geomorphology** aims to build fundamental models and concepts that explain how landscapes evolve over time.",keywords:["theoretical","geomorphology"]},
+  {q:"fluvial geomorphology",a:"**Fluvial geomorphology** studies the actions of flowing water (rivers and streams) and the landforms they create.",keywords:["fluvial","geomorphology"]},
+  {q:"glacial geomorphology",a:"**Glacial geomorphology** is the study of landscapes shaped by the movement and melting of glaciers.",keywords:["glacial","geomorphology"]},
+  {q:"arid geomorphology",a:"**Arid geomorphology** studies landforms in desert environments, primarily shaped by wind and sparse water flow.",keywords:["arid","geomorphology"]},
+  {q:"structural geomorphology",a:"**Structural geomorphology** studies how underlying geological structures (folds, faults, rock resistance) shape the surface landscape.",keywords:["structural","geomorphology"]},
+  {q:"paleogeomorphology",a:"**Paleogeomorphology** involves the reconstruction and study of ancient landscapes and past geomorphic processes.",keywords:["paleogeomorphology"]},
+  {q:"applied geomorphology",a:"**Applied geomorphology** uses geomorphic knowledge to solve real-world problems like hazard mitigation and resource management.",keywords:["applied","geomorphology"]},
+  {q:"environmental geomorphology",a:"**Environmental geomorphology** studies the interactions between human activities and geomorphic processes.",keywords:["environmental","geomorphology"]},
+  {q:"three main layers of earth interior",a:"Three main layers of the Earth's interior:\n• **Crust**\n• **Mantle**\n• **Core**",keywords:["layers","earth","interior","three"]},
+  {q:"mohorovicic discontinuity",a:"The **Mohorovičić Discontinuity (Moho)** is the boundary separating the Earth's crust from the underlying solid mantle.",keywords:["mohorovicic","discontinuity","moho"]},
+  {q:"sial and sima difference",a:"**SIAL:** Silicon & Aluminum-rich upper continental crust.\n**SIMA:** Silicon & Magnesium-rich denser oceanic crust.",keywords:["sial","sima","difference"]},
+  {q:"what is a mineral",a:"A **mineral** is a naturally occurring, inorganic solid with a definite chemical composition and crystalline structure.",keywords:["mineral","what is"]},
+  {q:"three major classifications of rocks",a:"Three major rock classifications:\n• **Igneous**\n• **Sedimentary**\n• **Metamorphic**",keywords:["classifications","rocks","three"]},
+  {q:"how are igneous rocks formed",a:"**Igneous rocks** are formed through cooling and solidification of magma (beneath surface) or lava (above surface).",keywords:["igneous rocks","formed"]},
+  {q:"how are sedimentary rocks formed",a:"**Sedimentary rocks** form through weathering, erosion, deposition, compaction, and cementation of older rocks.",keywords:["sedimentary rocks","formed"]},
+  {q:"metamorphic rock",a:"**Metamorphic rocks** form when rocks are subjected to extreme heat, pressure, or chemically active fluids.",keywords:["metamorphic rock"]},
+  {q:"example of intrusive igneous rock",a:"**Granite** is an example of an intrusive igneous rock.",keywords:["intrusive","igneous rock","example"]},
+  {q:"earth magnetic field",a:"The **liquid outer core** (composed mostly of iron and nickel) generates Earth's magnetic field.",keywords:["earth","magnetic field"]},
+  {q:"system concept geomorphology",a:"The **system concept** views landscapes as interconnected systems with inputs, transfers, and outputs of energy and matter.",keywords:["system concept","geomorphology"]},
+  {q:"steady state geomorphic system",a:"**Steady state** is a condition where inputs and outputs are balanced over time, keeping the landform stable.",keywords:["steady state","geomorphic system"]},
+  {q:"dynamic equilibrium",a:"**Dynamic equilibrium** is a state where a system fluctuates around an average but slowly changes its overall trajectory over time.",keywords:["dynamic equilibrium"]},
+  {q:"geosynclinal theory",a:"The **Geosynclinal Theory** of mountain building was proposed by **Leopold Kober**.",keywords:["geosynclinal theory"]},
+  {q:"arthur holmes mountain building",a:"**Arthur Holmes** proposed that thermal convection currents within the Earth's mantle drive the uplift and creation of mountains.",keywords:["arthur holmes","mountain building"]},
+  {q:"continental drift theory",a:"The **Continental Drift Theory** was proposed by **Alfred Wegener** in 1912.",keywords:["continental drift theory"]},
+  {q:"pangaea",a:"**Pangaea** was the name of the supercontinent in Wegener's Continental Drift Theory.",keywords:["pangaea"]},
+  {q:"plate tectonics theory",a:"**Plate Tectonics** is the theory that Earth's outer shell (lithosphere) is divided into plates that glide over the asthenosphere.",keywords:["plate tectonics","theory"]},
+  {q:"three types of plate boundaries",a:"Three types of plate boundaries:\n• **Divergent** (moving apart)\n• **Convergent** (colliding)\n• **Transform** (sliding past each other)",keywords:["plate boundaries","three types"]},
+  {q:"what is isostasy",a:"**Isostasy** is the state of gravitational equilibrium between the Earth's crust and mantle, where plates float at an elevation depending on their thickness and density.",keywords:["isostasy"]},
+  {q:"scientists known for isostasy",a:"Two primary scientists for Isostasy models:\n• **George Airy**\n• **John Henry Pratt**",keywords:["scientists","isostasy"]},
+  {q:"airy model of isostasy",a:"**Airy's model** suggests crustal blocks have the same density but different thicknesses; mountains have deep 'roots'.",keywords:["airy","model","isostasy"]},
+  {q:"pratt model of isostasy",a:"**Pratt's model** suggests crustal blocks have different densities; mountains are made of less dense rock.",keywords:["pratt","model","isostasy"]},
+  {q:"endogenetic processes",a:"**Endogenetic processes** are internal forces from within the Earth (volcanism, folding, faulting, earthquakes).",keywords:["endogenetic processes"]},
+  {q:"exogenetic processes",a:"**Exogenetic processes** are external forces that wear down landscapes (weathering, erosion by water, wind, ice).",keywords:["exogenetic processes"]},
+  {q:"walther penck landform development",a:"**Walther Penck** argued that landforms are shaped by a continuous, simultaneous interaction between tectonic uplift and erosion.",keywords:["walther penck","landform"]},
+  {q:"lc king geomorphology",a:"**L.C. King** is famous for the concept of **Pediplanation** and the parallel retreat of slopes.",keywords:["lc king","geomorphology"]},
+  {q:"erosional landform fluvial",a:"An erosional landform created by fluvial processes: **V-shaped valley** (gorge/canyon).",keywords:["erosional","landform","fluvial"]},
+  {q:"depositional landform fluvial",a:"A depositional landform created by fluvial processes: **Delta** (or alluvial fan/floodplain).",keywords:["depositional","landform","fluvial"]},
+  {q:"glacial erosional landform",a:"A glacial erosional landform: **U-shaped valley** (or Cirque/Horn).",keywords:["glacial","erosional","landform"]},
+  {q:"aeolian processes",a:"**Aeolian processes** are erosion, transportation, and deposition of material driven by wind.",keywords:["aeolian processes"]},
+  {q:"aeolian depositional landform",a:"An Aeolian depositional landform: **Sand dune** (or Loess).",keywords:["aeolian","depositional","landform"]},
+  {q:"topographical map",a:"A **topographical map** is a large-scale map representing natural and human-made features using contour lines to show elevation.",keywords:["topographical map"]},
+  {q:"contour line",a:"A **contour line** is an imaginary line on a map connecting points of equal elevation above sea level.",keywords:["contour line"]},
+  {q:"profile drawing",a:"A **profile drawing** is a cross-sectional view created from a map showing the relief (ups and downs) of land along a specific line.",keywords:["profile drawing"]},
+  {q:"slope map methods",a:"The two methods for slope/relative relief maps:\n• **Wentworth's method**\n• **Smith's method**",keywords:["slope map","methods"]},
+  {q:"stream ordering methods",a:"Stream ordering methods:\n• **Horton's method**\n• **Strahler's method**",keywords:["stream ordering","methods"]},
+  {q:"purpose of interpreting geological map",a:"The primary purpose of interpreting a geological map is to understand the **distribution, age, and structural relationships** of underlying rocks.",keywords:["purpose","geological map","interpreting"]},
+];
+
+// ============================================================
+//  USER MEMORY SYSTEM
+// ============================================================
+let userMemory = {
+  name: null,
+  nickname: null,
+  learned: []  // [{q, a}] learned from chat
+};
+
+// ============================================================
+//  GREETING DETECTION
+// ============================================================
+const greetings = {
+  "hi": true,"hello": true,"hey": true,"hii": true,"heyyy": true,
+  "good morning": true,"good afternoon": true,"good evening": true,"good night": true,
+  "how are you": true,"how r u": true,"how are u": true,
+  "who are you": true,"what is your name": true,"what's your name": true,
+  "whats your name": true,"tell me about yourself": true
+};
+
+function getGreetingReply(input) {
+  const lc = input.toLowerCase().trim();
+  if (lc.includes("how are you") || lc.includes("how r u") || lc.includes("how are u")) {
+    return `I'm doing wonderfully, thank you for asking! 🌸 Every conversation with you makes me happy. How can I help you learn geography today? 💕`;
+  }
+  if (lc.includes("who are you") || lc.includes("your name") || lc.includes("about yourself")) {
+    const name = userMemory.nickname || userMemory.name;
+    return `I'm **Helper AI** 🌸 — your sweet and dedicated study companion, specially designed for quick revision of **B.A 4th Semester Geography Major**. ${name ? `\n\nIt's lovely to chat with you, ${name}! 💕` : ''}\n\nI know all the key topics — Cartography, Population Geography, Settlement Geography, Geomorphology, and India's Geography. Ask me anything! ✨`;
+  }
+  if (lc.includes("good morning")) {
+    return `Good morning! ☀️ What a beautiful day to learn geography! I'm here and ready to help you revise. What topic shall we start with today? 💕`;
+  }
+  if (lc.includes("good evening")) {
+    return `Good evening! 🌙 A perfect time for some geography revision! Tell me what you'd like to learn tonight, dear. 💖`;
+  }
+  if (lc.includes("good night")) {
+    return `Good night! 🌙✨ Sweet dreams! Remember, every little bit of revision adds up. You're doing great! 💕`;
+  }
+  const replies = [
+    `Hello there! 🌸 I'm really happy to talk with you today. What would you like to learn in geography?`,
+    `Hi! 💕 It's so lovely to see you! Tell me what you want to revise today — I'm all yours!`,
+    `Hey! 🌷 Welcome back! I'm ready to help you ace your B.A 4th Sem Geography exam. What topic shall we explore? ✨`,
+    `Hello! 💖 How wonderful that you're here! Ask me anything about geography — I love helping you learn!`
+  ];
+  return replies[Math.floor(Math.random() * replies.length)];
+}
+
+// ============================================================
+//  NAME DETECTION
+// ============================================================
+function detectName(input) {
+  // "my name is X but you can call me Y" OR "you can call me X"
+  const callMeMatch = input.match(/(?:but\s+)?(?:you\s+can\s+call\s+me|just\s+call\s+me|call\s+me)\s+[""']?([A-Za-z]+)[""']?/i);
+  const myNameMatch = input.match(/my\s+name\s+is\s+[""']?([A-Za-z]+)[""']?/i);
+  const iAmMatch = input.match(/i(?:'m|\s+am)\s+[""']?([A-Za-z]+)[""']?/i);
+  
+  let changed = false;
+  if (myNameMatch) {
+    userMemory.name = myNameMatch[1];
+    changed = true;
+  }
+  if (callMeMatch) {
+    userMemory.nickname = callMeMatch[1];
+    changed = true;
+  } else if (iAmMatch && !myNameMatch && !userMemory.name) {
+    userMemory.name = iAmMatch[1];
+    changed = true;
+  }
+  return changed;
+}
+
+function getPreferredName() {
+  return userMemory.nickname || userMemory.name;
+}
+
+// ============================================================
+//  FUZZY MATCH KNOWLEDGE BASE
+// ============================================================
+function normalize(str) {
+  return str.toLowerCase().replace(/[^a-z0-9\s]/g,'').trim();
+}
+
+function scoreMatch(entry, query) {
+  const qWords = normalize(query).split(/\s+/).filter(w => w.length > 2);
+  let score = 0;
+  for (const kw of entry.keywords) {
+    if (normalize(query).includes(normalize(kw))) score += kw.split(' ').length * 3;
+  }
+  for (const w of qWords) {
+    if (normalize(entry.q).includes(w)) score += 1;
+  }
+  return score;
+}
+
+function findBestMatch(query) {
+  // First check user-learned entries
+  for (const item of userMemory.learned) {
+    if (normalize(query).includes(normalize(item.q)) || normalize(item.q).includes(normalize(query))) {
+      return {a: item.a, learned: true};
+    }
+  }
+  let best = null, bestScore = 0;
+  for (const entry of knowledgeBase) {
+    const s = scoreMatch(entry, query);
+    if (s > bestScore) { bestScore = s; best = entry; }
+  }
+  return bestScore >= 3 ? best : null;
+}
+
+// ============================================================
+//  AI RESPONSE LOGIC
+// ============================================================
+function generateResponse(userInput) {
+  const lc = userInput.toLowerCase().trim();
+  
+  // Name detection first
+  const nameChanged = detectName(userInput);
+  const preferredName = getPreferredName();
+  
+  if (nameChanged) {
+    const nicknameMsg = userMemory.nickname 
+      ? `Of course, I'll call you **${userMemory.nickname}** 💕 How lovely! What would you like to learn today, ${userMemory.nickname}?`
+      : `How wonderful to meet you, **${userMemory.name}**! 🌸 I'll remember your name. What geography topic would you like to revise today?`;
+    return nicknameMsg;
+  }
+  
+  // Greeting detection
+  const greetingKey = Object.keys(greetings).find(g => lc.includes(g));
+  if (greetingKey || lc.length < 5) {
+    return getGreetingReply(userInput);
+  }
+  
+  // Thank you / bye
+  if (lc.includes("thank") || lc.includes("thanks")) {
+    return `You're so very welcome${preferredName ? ', ' + preferredName : ''}! 💕 It truly makes me happy to help you. Keep studying and you'll do amazing! 🌸`;
+  }
+  if (lc.includes("bye") || lc.includes("goodbye")) {
+    return `Goodbye${preferredName ? ', ' + preferredName : ''}! 🌸 Best of luck with your exams! Remember, I'm always here for you. Study hard and shine bright! 💖✨`;
+  }
+  
+  // Search knowledge base
+  const match = findBestMatch(userInput);
+  if (match) {
+    const name = preferredName ? `\n\n*Good question, ${preferredName}!* ` : '';
+    return `${name ? name : ''}${formatAnswer(match.a)}`;
+  }
+  
+  // Learn from the AI response with Claude-like logic
+  const fallbackAnswer = generateFallbackAnswer(userInput);
+  // Save to learned
+  userMemory.learned.push({q: userInput, a: fallbackAnswer});
+  return `*(I'm learning this from our conversation!* 📚)\n\n${fallbackAnswer}`;
+}
+
+function formatAnswer(ans) {
+  // Convert markdown-like to HTML
+  return ans;
+}
+
+function generateFallbackAnswer(query) {
+  const lc = query.toLowerCase();
+  // Geography-topic guessing
+  if (lc.includes("river") || lc.includes("ganga") || lc.includes("brahmaputra")) {
+    return `Rivers are crucial geographic features! The major rivers of India include:\n• **Ganga** — the most sacred and largest river\n• **Brahmaputra** — originating from Tibet\n• **Yamuna, Godavari, Krishna** — other important rivers\n\nThey form the basis of Northern Plains and support agriculture. 💧`;
+  }
+  if (lc.includes("climate")) {
+    return `India has a **Tropical Monsoon Climate** characterized by:\n• Hot summers\n• Heavy monsoon rainfall (June–September)\n• Cool winters\n\nThe Tropic of Cancer divides India into two climatic zones. 🌦️`;
+  }
+  if (lc.includes("mountain") || lc.includes("himalayas") || lc.includes("himalaya")) {
+    return `The Himalayas are the world's highest mountain range, divided into:\n• **Himadri** (Great Himalayas) — highest peaks including Everest\n• **Himachal** (Middle Himalayas) — includes Shimla, Mussoorie\n• **Shiwalik** (Outer Himalayas) — foothills ⛰️`;
+  }
+  if (lc.includes("soil")) {
+    return `Major soils of India:\n• **Alluvial soil** — most fertile, found in Northern Plains\n• **Black soil (Regur)** — best for cotton, found in Deccan\n• **Red soil** — found in Peninsular India\n• **Laterite soil** — found in high rainfall areas 🌱`;
+  }
+  return `That's a thoughtful question! 🌸 I'm still learning about this specific topic. Here's what I can share:\n• This seems to be related to **Geography**\n• Try breaking your question into smaller parts\n• I've saved your question and will improve!\n\nPlease check your textbook for detailed information on this topic. 💕📚`;
+}
+
+// ============================================================
+//  CHAT UI
+// ============================================================
+const chat = document.getElementById('chatContainer');
+const input = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+
+function getTime() {
+  return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+}
+
+function addMsg(text, isUser) {
+  const row = document.createElement('div');
+  row.className = 'msg-row' + (isUser ? ' user' : '');
+
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  if (isUser) {
+    avatar.textContent = '👤';
+  } else {
+    avatar.innerHTML = `<img src="https://i.ibb.co/tTgw6Brj/1e327dd0-4197-4fca-bf4a-48d9665bdc60.jpg" alt="AI" onerror="this.parentNode.textContent='🌸'">`;
+  }
+
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble ' + (isUser ? 'user' : 'ai');
+
+  if (isUser) {
+    bubble.innerHTML = escapeHtml(text) + `<span class="time">${getTime()}</span>`;
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    row.insertBefore(bubble, avatar);
+    chat.appendChild(row);
+    scrollBottom();
+  } else {
+    row.appendChild(avatar);
+    row.appendChild(bubble);
+    chat.appendChild(row);
+    scrollBottom();
+    typeMessage(bubble, text);
+  }
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function renderMarkdown(text) {
+  // Bold
+  text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // Italic
+  text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
+  // Bullet points
+  text = text.replace(/^• (.+)$/gm, '<li>$1</li>');
+  text = text.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+  // Line breaks
+  text = text.replace(/\n/g, '<br>');
+  return text;
+}
+
+function typeMessage(bubble, rawText, speed = 18) {
+  const rendered = renderMarkdown(rawText);
+  // Word-by-word typing using spans extracted from rendered HTML
+  // We'll type the raw text word by word then reveal the rendered version
+  const words = rawText.split(' ');
+  let i = 0;
+  let current = '';
+  
+  function typeNext() {
+    if (i < words.length) {
+      current += (i === 0 ? '' : ' ') + words[i];
+      bubble.innerHTML = renderMarkdown(current) + `<span style="opacity:0.3">▍</span>`;
+      scrollBottom();
+      i++;
+      setTimeout(typeNext, speed + Math.random() * 15);
+    } else {
+      bubble.innerHTML = rendered + `<span class="time">${getTime()}</span>`;
+      scrollBottom();
+      sendBtn.disabled = false;
+    }
+  }
+  typeNext();
+}
+
+function showTyping() {
+  const row = document.createElement('div');
+  row.className = 'typing-indicator';
+  row.id = 'typingIndicator';
+  const avatar = document.createElement('div');
+  avatar.className = 'avatar';
+  avatar.innerHTML = `<img src="https://i.ibb.co/tTgw6Brj/1e327dd0-4197-4fca-bf4a-48d9665bdc60.jpg" alt="AI" onerror="this.parentNode.textContent='🌸'">`;
+  const dots = document.createElement('div');
+  dots.className = 'typing-dots';
+  dots.innerHTML = '<span></span><span></span><span></span>';
+  row.appendChild(avatar);
+  row.appendChild(dots);
+  chat.appendChild(row);
+  scrollBottom();
+}
+
+function hideTyping() {
+  const ti = document.getElementById('typingIndicator');
+  if (ti) ti.remove();
+}
+
+function scrollBottom() {
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function sendMessage() {
+  const text = input.value.trim();
+  if (!text || sendBtn.disabled) return;
+  input.value = '';
+  sendBtn.disabled = true;
+
+  addMsg(text, true);
+  showTyping();
+
+  const delay = 900 + Math.random() * 700;
+  setTimeout(() => {
+    hideTyping();
+    const response = generateResponse(text);
+    addMsg(response, false);
+  }, delay);
+}
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendMessage();
+});
+
+// ============================================================
+//  FLOATING HEARTS
+// ============================================================
+const heartBg = document.getElementById('heartBg');
+const heartEmojis = ['💗','💖','🌸','💕','✨','🌷','💝','🌺'];
+for (let i = 0; i < 20; i++) {
+  const s = document.createElement('span');
+  s.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+  s.style.left = Math.random() * 100 + 'vw';
+  s.style.animationDuration = (12 + Math.random() * 20) + 's';
+  s.style.animationDelay = (Math.random() * 15) + 's';
+  s.style.fontSize = (0.7 + Math.random()) + 'rem';
+  heartBg.appendChild(s);
+}
+
+// ============================================================
+//  LOADING & WELCOME
+// ============================================================
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loadingOverlay').classList.add('hidden');
+    // Welcome message
+    setTimeout(() => {
+      addMsg(`Hello there! 🌸 I'm **Helper AI**, your dedicated geography study companion!\n\n💖 I'm specially designed to help you with quick revision of **B.A 4th Semester Geography Major**.\n\n✨ I can help you with:\n• India's Geography (Location, Physical Setting, Population)\n• Cartography & Map Making\n• Population & Settlement Geography\n• Geomorphology\n\n*Please note: I'm still learning, so I may make small mistakes!* 💕\n\nWhat topic would you like to revise today?`, false);
+    }, 300);
+  }, 2800);
+});
+</script>
+</body>
+</html>
